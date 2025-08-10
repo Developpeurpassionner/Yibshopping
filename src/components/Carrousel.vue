@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-[500px] brightness-[60%]">
+  <div class="w-screen h-[600px] brightness-[60%] owerflow-hidden">
     <swiper
       :modules="[Autoplay]"
       :spaceBetween="10"
@@ -9,7 +9,7 @@
       class="w-full h-full"
     >
       <swiper-slide v-for="(image, index) in images" :key="index">
-        <img :src="image" class="w-full h-full object-cover" />
+        <img :src="image" class="w-full h-full object-cover block mx-auto" />
       </swiper-slide>
     </swiper>
   </div>
@@ -22,10 +22,10 @@ import "swiper/css";
 import "swiper/css/autoplay";
 
 const images = [
-  "/images/montre1.jpg",
+  "/images/montre1.png",
   "/images/montre2.jpg",
   "/images/montre3.jpg",
   "/images/montre4.jpg",
-  "/images/montre5.jpg",
+  "/images/montre5.png",
 ];
 </script>
