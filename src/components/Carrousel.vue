@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-[600px] brightness-[60%] owerflow-hidden">
+  <div class=" lg:h-[600px] w-screen h-[400px] brightness-[60%] owerflow-hidden">
     <swiper
       :modules="[Autoplay]"
       :spaceBetween="10"

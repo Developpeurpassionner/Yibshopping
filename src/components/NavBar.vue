@@ -14,10 +14,18 @@
             <button class="bg-green-800 px-4 rounded-sm font-bold text-white hover:bg-green-600">
                 <li><router-link to="/connexion">Se connecter</router-link></li>
             </button>
+             <p v-if="firstname" class="text-xl text-red-400 font-semibold flex">Bienvenue {{firstname }} !
+                <img src="../../public/images/sticker.png" alt="smiley" class="w-8 h-8"/>
+             </p>
         </ul>
         <!-- Menu burger sur mobile -->
-        <div class="lg:hidden">
+        <div class="mx-auto flex justify-between items-center gap-6 lg:hidden">
             <button @click="menuOuvert = !menuOuvert" class="text-4xl text-yellow-400 md:text-6xl">&#9776;</button>
+            <div>
+                 <p v-if="firstname" class="text-[20px] text-red-400 font-semibold flex">Bienvenue {{firstname }} !
+                      <img src="../../public/images/sticker.png" alt="smiley" class="w-8 h-8"/>
+                 </p>
+            </div>
         </div>
     </nav>
     <!-- Menu mobile -->
@@ -47,6 +55,12 @@
 
 <script setup>
    import { RouterLink } from 'vue-router';
-   import { ref } from "vue";
    const menuOuvert = ref(false);
+   import { ref, onMounted } from 'vue'
+
+const firstname = ref('')
+
+onMounted(() => {
+  firstname.value = localStorage.getItem('firstname') || ''
+})
 </script>

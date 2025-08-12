@@ -5,14 +5,7 @@
             <transition name="fade">
                 <p v-if="showMessage && messageType === 'error'"
                     class="text-white text-center text-lg bg-red-500 rounded-b-lg rounded-t-txl p-4 font-extrabold mx-auto">
-                    {{message }}</p>
-            </transition>
-            <!-- ✅ Message de succès -->
-            <transition name="fade">
-                <p v-if="showMessage && messageType === 'success'"
-                    class="text-white text-center text-lg bg-green-500 rounded-lg p-4 font-extrabold mx-auto w-fit shadow-lg">
-                    {{ message }}
-                </p>
+                    {{ message }}</p>
             </transition>
             <!-- ⏳ Animation de chargement -->
             <transition name="fade">
@@ -29,7 +22,7 @@
                 <form @submit.prevent="connexion">
                     <div v-for="(field, index) in fields" :key="index" class="w-full relative">
                         <label :for="field.id" class="text-white block mb-2 font-semibold text-lg">{{ field.label
-                        }}</label>
+                            }}</label>
                         <span v-if="!form[field.model]"
                             class="absolute left-2 top-8 bottom-8 text-lg text-gray-400 pointer-events-none">
                             {{ field.placeholder }}
@@ -75,10 +68,15 @@ const triggerMessage = (text, type = 'error', duration = 50000) => {
 }
 const messageType = ref('') // 'success' ou 'error'
 const isRedirecting = ref(false)
+const userFirstname = ref('')
 const connexion = async () => {
     message.value = ''
     try {
         const response = await axios.post('http://localhost:8000/api/connexion', form.value)
+        // Stocker le prénom
+        userFirstname.value = response.data.user.firstname
+        // Optionnel : stocker dans localStorage pour le garder après refresh
+        localStorage.setItem('firstname', response.data.user.firstname)
         triggerMessage(response.data.message, 'success')
         isRedirecting.value = true
         // Redirection après 2 secondes
