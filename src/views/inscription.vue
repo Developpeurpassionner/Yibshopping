@@ -66,7 +66,7 @@ const fields = [
 ]
 const showMessage = ref(false)
 
-const triggerMessage = (text, type = 'error', duration = 6000) => {
+const triggerMessage = (text, type = 'error', duration = 10000) => {
   message.value = text
   messageType.value = type
   showMessage.value = true
@@ -85,15 +85,21 @@ const inscription = async () => {
     const response = await axios.post('http://localhost:8000/api/inscription', form.value)
     triggerMessage(response.data.message, 'success')
     isRedirecting.value = true
-    // Redirection après 3 secondes
+    // Redirection après 6 secondes
     setTimeout(() => {
       router.push('/connexion')
-    }, 3000)
+    }, 6000)
   } catch (error) {
-    if (error.response && error.response.status === 422) {
+    if (error.response && error.response.status === 409) {
+      // Utilisateur déjà inscrit
+      triggerMessage(error.response.data.message, 'error')
+      setTimeout(() => {
+        router.push('/connexion')
+      }, 6000) // redirection après 6 secondes
+    } else if (error.response && error.response.status === 422) {
       triggerMessage(error.response.data.message, 'error')
     } else {
-      triggerMessage('Une erreur est survenue. Veuillez réessayer plus tard.')
+      triggerMessage('Une erreur est survenue. Veuillez réessayer plus tard.', 'error')
     }
   }
 }
