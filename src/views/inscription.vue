@@ -1,4 +1,5 @@
 <template>
+   <!--la div de toute la page -->
   <div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
     <div>
       <!-- ❌ Message d’erreur -->
@@ -18,26 +19,29 @@
       <transition name="fade">
         <div v-if="isRedirecting" class="flex justify-center items-center mt-4">
           <div class="loader mr-2"></div>
-          <p class="text-white text-lg font-semibold">Redirection en cours...</p>
+          <p class="text-white text-2xl font-semibold lg:text-lg md:text-4xl">Redirection en cours...</p>
         </div>
       </transition>
+      <!--la div du formulaire -->
       <div
         class="bg-gray-700 px-8 py-16 space-y-6 rounded-xl shadow-2xl transform transition duration-500 perspective-1000">
-        <h2 class="text-white text-2xl font-bold pb-8 text-center">Formulaire d'inscription</h2>
+        <h2 class="text-white text-2xl font-bold pb-8 text-center md:text-5xl lg:text-2xl">Formulaire d'inscription</h2>
         <form @submit.prevent="inscription">
           <div v-for="(field, index) in fields" :key="index" class="w-full relative">
-            <label :for="field.id" class="text-white block mb-2 font-semibold text-lg">{{ field.label }}</label>
+            <label :for="field.id" class="text-white block mb-2 font-semibold text-2xl lg:text-lg md:text-4xl">{{ field.label }}</label>
             <span v-if="!form[field.model]"
-              class="absolute left-2 top-8 bottom-8 text-lg text-gray-400 pointer-events-none">
+              class="absolute left-2 top-8 bottom-8 text-xl text-gray-400 pointer-events-none lg:text-lg md:text-4xl">
               {{ field.placeholder }}
             </span>
             <input :type="field.type" :id="field.id" v-model="form[field.model]" placeholder=" "
-              class="w-full px-2 py-2 rounded-lg bg-gray-800 text-white text-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300" />
+              class="w-full px-2 py-2 rounded-lg bg-gray-800 text-white text-2xl shadow-inner
+               focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300 lg:text-lg md:text-4xl" />
           </div>
-          <p class="text-white text-lg">Le mot de passe doit contenir au moins 8 caractères <br> avec au moins une
+          <p class="text-white text-xl lg:text-lg md:text-4xl">Le mot de passe doit contenir au moins 8 caractères <br> avec au moins une
             majuscule , une minuscule et un chiffre</p>
           <button type="submit"
-            class="w-full py-1 translate-y-[50%] bg-yellow-400 hover:bg-yellow-600 text-black text-lg font-bold rounded-lg shadow-lg cursor-pointer">
+            class="w-full py-1 translate-y-[50%] bg-yellow-400
+             hover:bg-yellow-600 text-black text-xl font-bold rounded-lg shadow-lg cursor-pointer lg:text-lg md:text-4xl">
             S'inscrire
           </button>
         </form>
