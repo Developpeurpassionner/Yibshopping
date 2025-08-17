@@ -11,7 +11,7 @@
           <p class="text-4xl font-bold text-blue-900 lg:text-4xl md:text-6xl">{{ stats.hommes }}</p>
         </div>
         <div class="flex justify-center">
-          <button class="cursor-pointer bg-blue-600 text-white text-xl lg:text-xl md:text-4xl px-4 py-1 rounded hover:bg-blue-500 transition">
+          <button @click="showModal=true" class="cursor-pointer bg-blue-600 text-white text-xl lg:text-xl md:text-4xl px-4 py-1 rounded hover:bg-blue-500 transition">
             Ajouter
           </button>
         </div>
@@ -23,12 +23,47 @@
           <p class="text-4xl font-bold text-pink-900 lg:text-4xl md:text-6xl">{{ stats.femmes }}</p>
         </div>
         <div class="flex justify-center">
-          <button class="cursor-pointer bg-red-600 text-white text-xl lg:text-xl md:text-4xl px-4 py-1 rounded hover:bg-red-400 transition">
+          <button @click="showModal=true" class="cursor-pointer bg-red-600 text-white text-xl lg:text-xl md:text-4xl px-4 py-1 rounded hover:bg-red-400 transition">
             Ajouter
           </button>
         </div>
       </div>
     </div>
+
+     <!-- Modal -->
+    <transition name="fade">
+      <div v-if="showModal" class="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+          <!-- Bouton de fermeture -->
+          <button @click="showModal = false"
+            class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl font-bold cursor-pointer">&times;</button>
+              <!-- Formulaire -->
+          <h2 class="text-2xl font-bold mb-4 text-center text-gray-700">Ajouter une montre</h2>
+          <form class="space-y-4" enctype="multipart/form-data">
+            <input type="text" name="nom" for="nom" id="nom" placeholder="Nom de la montre"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input type="file" for="photo" name="photo" id="photo" placeholder="photo" accept="image/*"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="number" for="prix" name="prix" id="prix" placeholder="Le prix"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <select
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">genre</option>
+              <option value="homme">Homme</option>
+              <option value="femme">Femme</option>
+            </select>
+            <textarea name="description" id="description" placeholder="description"  class="w-full px-4 py-2 border rounded 
+            focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+             <input type="number" for="quantité" name="quantité" id="quantité" placeholder="La quantité"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+             <button type="submit"
+              class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full cursor-pointer">
+              Ajouter la montre
+            </button>
+          </form>
+        </div>
+      </div>
+    </transition>
 
     <!-- Historique -->
     <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
@@ -37,8 +72,11 @@
         <thead>
           <tr class="bg-gray-200 text-gray-700">
             <th class="p-2 text-lg lg:text-base md:text-3xl">Nom</th>
-            <th class="p-2 text-lg lg:text-base md:text-3xl">Catégorie</th>
+            <th class="p-2 text-lg lg:text-base md:text-3xl">Photo</th>
+            <th class="p-2 text-lg lg:text-base md:text-3xl">Prix</th>
+            <th class="p-2 text-lg lg:text-base md:text-3xl">Genre</th>
             <th type="text" class="p-2 text-lg lg:text-base md:text-3xl">Description</th>
+            <th class="p-2 text-lg lg:text-base md:text-3xl">Quantité</th>
             <th type="date" class="p-2 text-lg lg:text-base md:text-3xl">Date</th>
             <th class="p-2 text-lg lg:text-base md:text-3xl">Heure</th>
           </tr>
@@ -60,7 +98,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-
+const showModal = ref(null)
 const stats = ref({ hommes: 0, femmes: 0 })
 const historique = ref([])
 
@@ -75,3 +113,14 @@ onMounted(async () => {
   historique.value = resHistorique.data
 })
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
