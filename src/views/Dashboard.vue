@@ -62,13 +62,13 @@
             <select v-model="information_montre.genre"
               class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl">
               <option value="">genre</option>
-              <option value="homme">Homme</option>
-              <option value="femme">Femme</option>
+              <option value="homme">homme</option>
+              <option value="femme">femme</option>
             </select>
-            <textarea v-model="information_montre.description" type="text" name="description" id="description"
+            <textarea v-model="information_montre.description" type="string" name="description" id="description"
               placeholder="description" class="w-full px-4 py-2 border rounded 
             focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl"></textarea>
-            <input v-model="information_montre.quantite" type="number" for="quantité" name="quantité" id="quantité"
+            <input v-model="information_montre.quantité" type="number" for="quantité" name="quantité" id="quantité"
               placeholder="La quantité"
               class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl" />
             <button  type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full cursor-pointer
@@ -127,10 +127,10 @@ const Api_Creation_Montre = ref ({
 const information_montre = ref({
   nom: '',
   photo: null,
-  prix: '',
+  prix: null,
   genre: '',
   description: '',
-  quantite: ''
+  quantité: null
 })
 const photoFile = ref(null) // pour stocker le fichier sélectionné
 const UploadPhoto = (event) => {
@@ -143,7 +143,7 @@ const AjouterMontre = async () => {
   formData.append('prix', information_montre.value.prix)
   formData.append('genre', information_montre.value.genre)
   formData.append('description', information_montre.value.description)
-  formData.append('quantite', information_montre.value.quantite)
+  formData.append('quantité', information_montre.value.quantité)
   if (photoFile.value) {
     formData.append('photo', photoFile.value)
   }
@@ -162,9 +162,7 @@ const AjouterMontre = async () => {
     return
   }
   try {
-    await axios.post(url, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    })
+    await axios.post(url, formData)
     successMessage.value = '✅ Montre ajoutée avec succès !'
     showSuccess.value = true
 
@@ -174,7 +172,7 @@ const AjouterMontre = async () => {
     }, 6000)
     // Fermer le modal et réinitialiser le formulaire
     showModal.value = false
-    information_montre.value = { nom: '', photo:null , prix: '', genre: '', description: '', quantite: '' }
+    information_montre.value = { nom: '', photo:null , prix: null, genre: '', description: '', quantité: null }
     photoFile.value = null
 
  } catch (error) {
