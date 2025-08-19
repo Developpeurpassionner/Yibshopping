@@ -1,4 +1,12 @@
 <template>
+  <transition name="fade-slide">
+    <div v-if="showSuccess" class="fixed top-4 left-1/2 transform -translate-x-1/2
+           bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg
+           w-[90%] sm:w-auto text-center z-50">
+      {{ successMessage }}
+    </div>
+  </transition>
+
   <div class="min-h-screen bg-gray-100 p-6 flex flex-col gap-y-8 lg:gap-y-8 md:gap-y-16">
 
     <h1 class="text-3xl font-bold mb-6 text-center text-gray-800 lg:text-3xl md:text-5xl">Tableau de bord</h1>
@@ -11,7 +19,8 @@
           <p class="text-4xl font-bold text-blue-900 lg:text-4xl md:text-6xl">{{ stats.hommes }}</p>
         </div>
         <div class="flex justify-center">
-          <button @click="showModal=true" class="cursor-pointer bg-blue-600 text-white text-xl lg:text-xl md:text-4xl px-4 py-1 rounded hover:bg-blue-500 transition">
+          <button @click="showModal = true"
+            class="cursor-pointer bg-blue-600 text-white text-xl lg:text-xl md:text-4xl px-4 py-1 rounded hover:bg-blue-500 transition">
             Ajouter
           </button>
         </div>
@@ -23,41 +32,47 @@
           <p class="text-4xl font-bold text-pink-900 lg:text-4xl md:text-6xl">{{ stats.femmes }}</p>
         </div>
         <div class="flex justify-center">
-          <button @click="showModal=true" class="cursor-pointer bg-red-600 text-white text-xl lg:text-xl md:text-4xl px-4 py-1 rounded hover:bg-red-400 transition">
+          <button @click="showModal = true"
+            class="cursor-pointer bg-red-600 text-white text-xl lg:text-xl md:text-4xl px-4 py-1 rounded hover:bg-red-400 transition">
             Ajouter
           </button>
         </div>
       </div>
     </div>
 
-     <!-- Modal -->
+    <!-- Modal -->
     <transition name="fade">
       <div v-if="showModal" class="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
           <!-- Bouton de fermeture -->
           <button @click="showModal = false"
-            class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl font-bold cursor-pointer">&times;</button>
-              <!-- Formulaire -->
-          <h2 class="text-2xl font-bold mb-4 text-center text-gray-700">Ajouter une montre</h2>
-          <form class="space-y-4" enctype="multipart/form-data">
-            <input type="text" name="nom" for="nom" id="nom" placeholder="Nom de la montre"
-              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <input type="file" for="photo" name="photo" id="photo" placeholder="photo" accept="image/*"
-              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              <input type="number" for="prix" name="prix" id="prix" placeholder="Le prix"
-              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <select
-              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+            class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-2xl lg:text-xl md:text-4xl font-bold cursor-pointer">&times;</button>
+          <!-- Formulaire -->
+          <h2 class="text-2xl lg:text-2xl md:text-4xl font-bold mb-4 text-center text-gray-700">Ajouter une montre</h2>
+          <form @submit.prevent="AjouterMontre" class="space-y-4" enctype="multipart/form-data">
+            <input v-model="information_montre.nom" type="string" name="nom" for="nom" id="nom"
+              placeholder="Nom de la montre"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl" />
+            <input @change="UploadPhoto" type="file" for="photo" name="photo" id="photo" placeholder="photo"
+              accept="image/*"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl" />
+            <input v-model="information_montre.prix" type="number" for="prix" name="prix" id="prix"
+              placeholder="Le prix"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl" />
+            <select v-model="information_montre.genre"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl">
               <option value="">genre</option>
               <option value="homme">Homme</option>
               <option value="femme">Femme</option>
             </select>
-            <textarea name="description" id="description" placeholder="description"  class="w-full px-4 py-2 border rounded 
-            focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-             <input type="number" for="quantité" name="quantité" id="quantité" placeholder="La quantité"
-              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-             <button type="submit"
-              class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full cursor-pointer">
+            <textarea v-model="information_montre.description" type="text" name="description" id="description"
+              placeholder="description" class="w-full px-4 py-2 border rounded 
+            focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl"></textarea>
+            <input v-model="information_montre.quantite" type="number" for="quantité" name="quantité" id="quantité"
+              placeholder="La quantité"
+              class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl" />
+            <button  type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full cursor-pointer
+               text-xl lg:text-lg md:text-3xl">
               Ajouter la montre
             </button>
           </form>
@@ -96,22 +111,84 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
-const showModal = ref(null)
+const showModal = ref(false)
 const stats = ref({ hommes: 0, femmes: 0 })
 const historique = ref([])
+const showSuccess = ref(false)
+const successMessage = ref('')
+const Api_Creation_Montre = ref ({
+  homme: 'http://localhost:8000/api/montres_pour_hommes',
+  femme: 'http://localhost:8000/api/montres_pour_femmes'
+})
+
+// Information de la montre à ajouter homme ou femme
+const information_montre = ref({
+  nom: '',
+  photo: null,
+  prix: '',
+  genre: '',
+  description: '',
+  quantite: ''
+})
+const photoFile = ref(null) // pour stocker le fichier sélectionné
+const UploadPhoto = (event) => {
+  photoFile.value = event.target.files[0] // le premier fichier choisi
+}
+const AjouterMontre = async () => {
+  //construire les données en FormData pour inclure le fichier photo
+  const formData = new FormData()
+  formData.append('nom', information_montre.value.nom)
+  formData.append('prix', information_montre.value.prix)
+  formData.append('genre', information_montre.value.genre)
+  formData.append('description', information_montre.value.description)
+  formData.append('quantite', information_montre.value.quantite)
+  if (photoFile.value) {
+    formData.append('photo', photoFile.value)
+  }
+
+  //Requete Api dynamique en fonction du genre
+  let url = null
+
+  if (information_montre.value.genre === 'homme') {
+    url = Api_Creation_Montre.value.homme
+  }
+  else if (information_montre.value.genre === 'femme') {
+    url = Api_Creation_Montre.value.femme
+  }
+  else {
+    alert('Veuillez sélectionner un genre')
+    return
+  }
+  try {
+    await axios.post(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    successMessage.value = '✅ Montre ajoutée avec succès !'
+    showSuccess.value = true
+
+    // Masquer l’alerte après 6 secondes
+    setTimeout(() => {
+      showSuccess.value = false
+    }, 6000)
+    // Fermer le modal et réinitialiser le formulaire
+    showModal.value = false
+    information_montre.value = { nom: '', photo:null , prix: '', genre: '', description: '', quantite: '' }
+    photoFile.value = null
+
+ } catch (error) {
+  console.error('Erreur ajout montre', error.response?.data || error.message)
+  successMessage.value = error.response?.data?.message || 'Erreur lors de l’ajout de la montre'
+  showSuccess.value = true
+  setTimeout(() => showSuccess.value = false, 6000)
+}
+
+}
 
 const formatDate = (timestamp) => new Date(timestamp).toLocaleDateString()
 const formatTime = (timestamp) => new Date(timestamp).toLocaleTimeString()
 
-onMounted(async () => {
-  const resStats = await axios.get('http://localhost:8000/api/montres/stats')
-  stats.value = resStats.data
-
-  const resHistorique = await axios.get('http://localhost:8000/api/montres/historique')
-  historique.value = resHistorique.data
-})
 </script>
 
 <style scoped>
@@ -119,8 +196,24 @@ onMounted(async () => {
 .fade-leave-active {
   transition: opacity 0.3s ease;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>
