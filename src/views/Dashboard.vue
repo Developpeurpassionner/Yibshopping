@@ -71,7 +71,7 @@
             <input v-model="information_montre.quantité" type="number" for="quantité" name="quantité" id="quantité"
               placeholder="La quantité"
               class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xl lg:text-lg md:text-3xl" />
-            <button  type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full cursor-pointer
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-full cursor-pointer
                text-xl lg:text-lg md:text-3xl">
               Ajouter la montre
             </button>
@@ -111,14 +111,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 const showModal = ref(false)
 const stats = ref({ hommes: 0, femmes: 0 })
 const historique = ref([])
 const showSuccess = ref(false)
 const successMessage = ref('')
-const Api_Creation_Montre = ref ({
+const Api_Creation_Montre = ref({
   homme: 'http://localhost:8000/api/montres_pour_hommes',
   femme: 'http://localhost:8000/api/montres_pour_femmes'
 })
@@ -150,7 +150,6 @@ const AjouterMontre = async () => {
 
   //Requete Api dynamique en fonction du genre
   let url = null
-
   if (information_montre.value.genre === 'homme') {
     url = Api_Creation_Montre.value.homme
   }
@@ -161,6 +160,7 @@ const AjouterMontre = async () => {
     alert('Veuillez sélectionner un genre')
     return
   }
+
   try {
     await axios.post(url, formData)
     successMessage.value = '✅ Montre ajoutée avec succès !'
@@ -172,17 +172,31 @@ const AjouterMontre = async () => {
     }, 6000)
     // Fermer le modal et réinitialiser le formulaire
     showModal.value = false
-    information_montre.value = { nom: '', photo:null , prix: null, genre: '', description: '', quantité: null }
+    information_montre.value = { nom: '', photo: null, prix: null, genre: '', description: '', quantité: null }
     photoFile.value = null
 
- } catch (error) {
-  console.error('Erreur ajout montre', error.response?.data || error.message)
-  successMessage.value = error.response?.data?.message || 'Erreur lors de l’ajout de la montre'
-  showSuccess.value = true
-  setTimeout(() => showSuccess.value = false, 6000)
-}
+  } catch (error) {
+    console.error('Erreur ajout montre', error.response?.data || error.message)
+    successMessage.value = error.response?.data?.message || 'Erreur lors de l’ajout de la montre'
+    showSuccess.value = true
+    setTimeout(() => showSuccess.value = false, 6000)
+  }
 
 }
+//la variable pour stocker les montres pour hommes
+const TableauPourRecupererMontresHommes = ref([])
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/Dashboard')
+    TableauPourRecupererMontresHommes.value = response.data.data
+    // Mettre à jour les statistiques
+    stats.value.hommes = TableauPourRecupererMontresHommes.value.length
+  } catch (error) {
+    console.error('Erreur lors de la récupération des montres pour hommes', error)
+  }
+})
+//La logique pour récupérer les montres pour hommes
 
 const formatDate = (timestamp) => new Date(timestamp).toLocaleDateString()
 const formatTime = (timestamp) => new Date(timestamp).toLocaleTimeString()
