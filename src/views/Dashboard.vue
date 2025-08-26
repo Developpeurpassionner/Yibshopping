@@ -82,8 +82,9 @@
 
     <!-- Historique -->
     <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
-      <h2 class="font-bold text-center text-2xl lg:text-2xl md:text-4xl mb-4 text-gray-950">Historique des actions</h2>
-      <table class="w-full text-left border-collapse">
+      <h2 class="font-bold text-center text-2xl lg:text-2xl md:text-4xl mb-4 text-gray-950">Informations sur toutes les
+        montres</h2>
+      <table class="w-full text-left border bg-gray-50 mx-auto">
         <thead>
           <tr class="bg-gray-200 text-gray-700">
             <th class="p-2 text-lg lg:text-base md:text-3xl">Nom</th>
@@ -92,21 +93,45 @@
             <th class="p-2 text-lg lg:text-base md:text-3xl">Genre</th>
             <th type="text" class="p-2 text-lg lg:text-base md:text-3xl">Description</th>
             <th class="p-2 text-lg lg:text-base md:text-3xl">Quantité</th>
-            <th type="date" class="p-2 text-lg lg:text-base md:text-3xl">Date</th>
-            <th class="p-2 text-lg lg:text-base md:text-3xl">Heure</th>
+            <th type="date" class="p-2 text-lg lg:text-base md:text-3xl">Date et heure</th>
+            <th type="date" class="p-2 text-lg lg:text-base md:text-3xl"></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="log in historique" :key="log.id" class="border-b">
-            <td class="p-2">{{ log.action }}</td>
-            <td class="p-2">{{ log.categorie }}</td>
-            <td class="p-2">{{ log.nom }}</td>
-            <td class="p-2">{{ formatDate(log.timestamp) }}</td>
-            <td class="p-2">{{ formatTime(log.timestamp) }}</td>
+          <tr v-for="NouvelleMontre in ToutesLesMontres" :key="NouvelleMontre.id" class="border">
+            <td class="p-2">{{ NouvelleMontre.nom }}</td>
+            <td><img :src="NouvelleMontre.photo.startsWith('/storage') ?
+              'http://localhost:8000' + NouvelleMontre.photo : NouvelleMontre.photo"
+                class="w-20 h-20 object-cover rounded cursor-pointer hover:scale-105 transition" @click="imageZoom = NouvelleMontre.photo.startsWith('/storage') ? 'http://localhost:8000'
+                  + NouvelleMontre.photo : NouvelleMontre.photo" /></td>
+            <td class="p-2">{{ NouvelleMontre.prix }}</td>
+            <td class="p-2">{{ NouvelleMontre.genre }}</td>
+            <td class="p-2">{{ NouvelleMontre.description }}</td>
+            <td class="p-2">{{ NouvelleMontre.quantité }}</td>
+            <td class="px-4 py-2 text-sm text-gray-700">
+              {{ formatDateTime(NouvelleMontre.created_at) }}
+            </td>
+            <td class="flex gap-x-8 p-6">
+              <button class="cursor-pointer bg-red-900 text-white text-lg lg:text-sm md:text-4xl px-4 py-1 rounded hover:bg-red-600 transition">
+                supprimer
+              </button>
+              <button class="cursor-pointer bg-green-800 text-white text-lg lg:text-sm md:text-4xl px-4 py-1 rounded hover:bg-green-400 transition">
+                Modifier
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
+    <transition name="fade">
+      <div v-if="imageZoom" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <img :src="imageZoom" alt="Zoom montre" class="max-w-full max-h-full rounded-lg shadow-lg" />
+        <button @click="imageZoom = null"
+          class="absolute top-4 right-4 text-white text-3xl font-bold hover:text-red-400 transition cursor-pointer">&times;
+        </button>
+      </div>
+    </transition>
+
   </div>
 </template>
 
@@ -115,7 +140,6 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 const showModal = ref(false)
 const stats = ref({ hommes: 0, femmes: 0 })
-const historique = ref([])
 const showSuccess = ref(false)
 const successMessage = ref('')
 const Api_Creation_Montre = ref({
@@ -136,6 +160,18 @@ const photoFile = ref(null) // pour stocker le fichier sélectionné
 const UploadPhoto = (event) => {
   photoFile.value = event.target.files[0] // le premier fichier choisi
 }
+//la variable pour stocker toutes les montres
+const ToutesLesMontres = ref([])
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/Dashboard')
+    ToutesLesMontres.value = response.data
+  } catch (error) {
+    console.error('Erreur lors du chargement des montres', error)
+  }
+})
+
 const AjouterMontre = async () => {
   //construire les données en FormData pour inclure le fichier photo
   const formData = new FormData()
@@ -162,7 +198,11 @@ const AjouterMontre = async () => {
   }
 
   try {
-    await axios.post(url, formData)
+    const response = await axios.post(url, formData)
+    const NouvelleMontre = response.data.MontreAdd
+    if (NouvelleMontre) {
+      ToutesLesMontres.value.push(NouvelleMontre)
+    }
     successMessage.value = '✅ Montre ajoutée avec succès !'
     showSuccess.value = true
 
@@ -183,23 +223,20 @@ const AjouterMontre = async () => {
   }
 
 }
-//la variable pour stocker les montres pour hommes
-const TableauPourRecupererMontresHommes = ref([])
 
-onMounted(async () => {
-  try {
-    const response = await axios.get('http://localhost:8000/api/Dashboard')
-    TableauPourRecupererMontresHommes.value = response.data.data
-    // Mettre à jour les statistiques
-    stats.value.hommes = TableauPourRecupererMontresHommes.value.length
-  } catch (error) {
-    console.error('Erreur lors de la récupération des montres pour hommes', error)
-  }
-})
-//La logique pour récupérer les montres pour hommes
+const imageZoom = ref(null) // stocke l’URL de l’image à agrandir
 
-const formatDate = (timestamp) => new Date(timestamp).toLocaleDateString()
-const formatTime = (timestamp) => new Date(timestamp).toLocaleTimeString()
+const formatDateTime = (timestamp) => {
+  const date = new Date(timestamp)
+  return date.toLocaleString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+
+}
 
 </script>
 
@@ -227,5 +264,15 @@ const formatTime = (timestamp) => new Date(timestamp).toLocaleTimeString()
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-20px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
