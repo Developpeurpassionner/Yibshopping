@@ -58,10 +58,11 @@
             <li><router-link to="/Montres_femmes" class="block py-3 md:py-5"
                     :class="{ 'text-yellow-600 font-bold': $route.path === '/Montres_femmes' }"
                     @click="menuOuvert = false">Montres
-                    <span class=" underline underline-offset-8 decoration-yellow-700"
+                     <span class=" underline underline-offset-8 decoration-yellow-700"
                         :class="{ 'text-yellow-600 font-bold underline underline-offset-4': $route.path === '/Montres_femmes' }"
                         @click="menuOuvert = false">Femmes
-                    </span></router-link></li>
+                    </span></router-link>
+                </li>
             <template v-if="!isConnected">
                 <li><router-link to="/inscription"
                         class="block py-3 underline underline-offset-8 decoration-yellow-700 md:py-5"

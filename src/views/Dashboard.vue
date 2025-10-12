@@ -82,33 +82,33 @@
 
     <!-- Historique -->
     <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
-      <h2 class="font-bold text-center text-2xl lg:text-2xl md:text-4xl mb-4 text-gray-950">Informations sur toutes les
+      <h2 class="font-bold text-center text-xl lg:text-2xl md:text-4xl mb-4 text-gray-950">Informations sur toutes les
         montres</h2>
       <table class="w-full text-left border bg-gray-50 mx-auto">
         <thead>
           <tr class="bg-gray-200 text-gray-700">
-            <th class="p-2 text-lg lg:text-base md:text-3xl">Nom</th>
-            <th class="p-2 text-lg lg:text-base md:text-3xl">Photo</th>
-            <th class="p-2 text-lg lg:text-base md:text-3xl">Prix</th>
-            <th class="p-2 text-lg lg:text-base md:text-3xl">Genre</th>
-            <th type="text" class="p-2 text-lg lg:text-base md:text-3xl">Description</th>
-            <th class="p-2 text-lg lg:text-base md:text-3xl">Quantité</th>
-            <th type="date" class="p-2 text-lg lg:text-base md:text-3xl">Date et heure</th>
-            <th type="date" class="p-2 text-lg lg:text-base md:text-3xl"></th>
+            <th class="p-2 text-xl lg:text-base md:text-3xl">Nom</th>
+            <th class="p-2 text-xl lg:text-base md:text-3xl">Photo</th>
+            <th class="p-2 text-xl lg:text-base md:text-3xl">Prix</th>
+            <th class="p-2 text-xl lg:text-base md:text-3xl">Genre</th>
+            <th type="text" class="p-2 text-xl lg:text-base md:text-3xl">Description</th>
+            <th class="p-2 text-xl lg:text-base md:text-3xl">Quantité</th>
+            <th type="date" class="p-2 text-xl lg:text-base md:text-3xl">Date et heure</th>
+            <th type="date" class="p-2 text-xl lg:text-base md:text-3xl"></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="NouvelleMontre in ToutesLesMontres" :key="NouvelleMontre.id" class="border">
+          <tr v-for="NouvelleMontre in ToutesLesMontres" :key="NouvelleMontre.id" class="border text-xl lg:text-base md:text-3xl">
             <td class="p-2">{{ NouvelleMontre.nom }}</td>
             <td><img :src="NouvelleMontre.photo.startsWith('/storage') ?
               'http://localhost:8000' + NouvelleMontre.photo : NouvelleMontre.photo"
-                class="w-20 h-20 object-cover rounded cursor-pointer hover:scale-105 transition" @click="imageZoom = NouvelleMontre.photo.startsWith('/storage') ? 'http://localhost:8000'
+                class="w-35 h-35 lg:w-20 lg:h-20 md:w-50 md:h-50 object-cover rounded cursor-pointer hover:scale-105 transition" @click="imageZoom = NouvelleMontre.photo.startsWith('/storage') ? 'http://localhost:8000'
                   + NouvelleMontre.photo : NouvelleMontre.photo" /></td>
             <td class="p-2">{{ NouvelleMontre.prix }}</td>
             <td class="p-2">{{ NouvelleMontre.genre }}</td>
             <td class="p-2">{{ NouvelleMontre.description }}</td>
             <td class="p-2">{{ NouvelleMontre.quantité }}</td>
-            <td class="px-4 py-2 text-sm text-gray-700">
+            <td class="px-4 py-2  text-gray-700">
               {{ formatDateTime(NouvelleMontre.created_at) }}
             </td>
             <td class="flex gap-x-8 p-6">

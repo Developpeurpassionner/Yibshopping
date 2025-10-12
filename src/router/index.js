@@ -4,6 +4,7 @@ import inscription from "../views/inscription.vue";
 import Connexion from "@/views/connexion.vue";
 import FormulaireDeConnexionAuPanneauAdmin from "@/views/FormulaireDeConnexionAuPanneauAdmin.vue";
 import Dashboard from "@/views/Dashboard.vue";
+import MontresFemmes from "@/views/MontresFemmes.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -31,6 +32,11 @@ const router = createRouter({
       path: "/Dashboard",
       name: "Dashboard",
       component: Dashboard,
+    },
+     {
+      path: "/Montres_femmes",
+      name: "Montres_femmes",
+      component: MontresFemmes,
     },
   ],
 });
