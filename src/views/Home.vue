@@ -1,22 +1,35 @@
 <template>
-  <div class="mt-20">
+  <div class="mt-20 overflow-x-hidden">
     <NavBar />
     <Carrousel />
-  </div>
-  <div v-for="MontreHomme in MontresHommes">
-    <p>{{ MontreHomme.nom }}</p>
-    <p>{{ MontreHomme.prix }}</p>
-    <img :src="MontreHomme.photo.startsWith('/storage') ?
-      'http://localhost:8000' + MontreHomme.photo : MontreHomme.photo"
-      class="w-35 h-35 lg:w-20 lg:h-20 md:w-50 md:h-50 object-cover rounded cursor-pointer hover:scale-105 transition"
-      @click="imageZoom = MontreHomme.photo.startsWith('/storage') ? 'http://localhost:8000'
-        + MontreHomme.photo : MontreHomme.photo" />
+  </div><br><br>
+  <ButtonNavigationMontre /><br>
+  <div class="grid grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+    <div v-for="MontreHomme in MontresHommes" :key="MontreHomme.id"
+      class="bg-gray-300 rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
+
+      <img :src="MontreHomme.photo.startsWith('/storage')
+        ? 'http://localhost:8000' + MontreHomme.photo
+        : MontreHomme.photo" alt="Image de la montre"
+        class="w-40 h-40 object-cover rounded-md mb-4 cursor-pointer hover:scale-105 transition duration-300" @click="imageZoom = MontreHomme.photo.startsWith('/storage')
+          ? 'http://localhost:8000' + MontreHomme.photo
+          : MontreHomme.photo" />
+
+      <p class="text-lg font-semibold text-gray-800 mb-1">{{ MontreHomme.nom }}</p>
+      <p class="text-lg text-gray-600 mb-2">Prix : <span class="font-bold text-blue-600">{{ MontreHomme.prix }} Fcfa</span>
+      </p>
+
+      <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition">
+        Voir détails
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import Carrousel from "../components/Carrousel.vue";
 import NavBar from "../components/NavBar.vue";
+import ButtonNavigationMontre from "@/components/ButtonNavigationMontre.vue";
 import axios from 'axios'
 import { ref, onMounted } from "vue";
 const MontresHommes = ref([]);
