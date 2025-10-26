@@ -5,6 +5,7 @@ import Connexion from "@/views/connexion.vue";
 import FormulaireDeConnexionAuPanneauAdmin from "@/views/FormulaireDeConnexionAuPanneauAdmin.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import MontresFemmes from "@/views/MontresFemmes.vue";
+import Connexionotp from "@/views/connexionotp.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -38,6 +39,11 @@ const router = createRouter({
       name: "Montres_femmes",
       component: MontresFemmes,
     },
+    {
+      path: "/connexionOTP",
+      name: "connexionOTP",
+      component: Connexionotp
+    }
   ],
 });
 
