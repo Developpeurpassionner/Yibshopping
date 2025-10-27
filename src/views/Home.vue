@@ -20,7 +20,7 @@
       </p>
 
       <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition">
-        Voir détails
+        Commander
       </button>
       <!-- Modal -->
       <div v-if="imageZoom" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
@@ -41,13 +41,15 @@
         </div>
       </div>
     </div>
-  </div>
+  </div><br><br>
+  <Footer />
 </template>
 
 <script setup>
 import Carrousel from "../components/Carrousel.vue";
 import NavBar from "../components/NavBar.vue";
 import ButtonNavigationMontre from "@/components/ButtonNavigationMontre.vue";
+import Footer from "@/components/Footer.vue";
 import axios from 'axios'
 import { ref, onMounted } from "vue";
 const MontresHommes = ref([]);
