@@ -19,7 +19,7 @@
                 class="bg-gray-700 px-8 py-20 
                 space-y-6 rounded-xl shadow-2xl transform transition duration-500 perspective-1000
                  lg:px-8 lg:py-16 md:px-14 md:py-28 lg:space-y-6">
-                <h2 class="text-white text-2xl font-bold pb-8 text-center lg:text-2xl md:text-4xl">Rentrer votre code</h2>
+                <h2 class="text-white text-2xl font-bold pb-8 text-center lg:text-2xl md:text-4xl">Vous avez reçus un code par mail</h2>
                 <form @submit.prevent="connexion">
                     <div v-for="(field, index) in fields" :key="index" class="w-full relative">
                         <label :for="field.id" class="text-white block mb-2 font-semibold text-2xl lg:text-lg md:text-4xl">{{ field.label
@@ -52,7 +52,7 @@ const route = useRoute()
 const form = ref({otp_code: '', email: ''})
 const message = ref('')
 const fields = [
-    { id: 'otp_code', label: 'Votre code *', type: 'text', model: 'otp_code', placeholder: 'Rentrer votre code' },
+    { id: 'otp_code', label: 'Rentrer votre code *', type: 'text', model: 'otp_code', placeholder: 'Rentrer votre code' },
 ]
 
 const showMessage = ref(false)
