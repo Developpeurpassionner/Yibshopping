@@ -6,7 +6,7 @@
   <ButtonNavigationMontre :categories="categories" :couleurs="couleurs" @filtrer="filtrerMontresParcategorie" />
   <br>
   <div class="grid grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-    <div v-for="MontreHomme in montresFiltrees" :key="MontreHomme.id"
+    <div v-for="MontreHomme in montresFiltrees" :key="MontreHomme.id" @click="openModal2(MontreHomme)"
       class="bg-gray-300 rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
       <!-- Image cliquable -->
       <img :src="MontreHomme.photo.startsWith('/storage')
@@ -42,6 +42,8 @@
       </div>
     </div>
   </div><br><br>
+  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2"
+  class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl  z-50" />
   <Footer />
 </template>
 
@@ -51,12 +53,15 @@ import NavBar from "../components/NavBar.vue";
 import ButtonNavigationMontre from "@/components/ButtonNavigationMontre.vue";
 import Footer from "@/components/Footer.vue";
 import axios from 'axios'
+import DetailMontrePlusFormulaire from "@/components/DetailMontrePlusFormulaire.vue";
 import { ref, onMounted } from "vue";
 const MontresHommes = ref([]);
 const montresFiltrees = ref([]);
 const imageZoom = ref(null); // <- état pour l’image agrandie
 const couleurs = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500']
 const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
+const selectmontre = ref(null)
+
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8000/api/montreshommes');
@@ -86,4 +91,12 @@ function openModal(MontreHomme) {
 function closeModal() {
   imageZoom.value = null;
 }
+// Ouvrir le modal detail montre plus formulaire
+function openModal2(MontreHomme) {
+  selectmontre.value = MontreHomme
+}
+function closeModal2() {
+  selectmontre.value = null
+}
+
 </script>
