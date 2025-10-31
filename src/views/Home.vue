@@ -6,7 +6,7 @@
   <ButtonNavigationMontre :categories="categories" :couleurs="couleurs" @filtrer="filtrerMontresParcategorie" />
   <br>
   <div class="grid grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-    <div v-for="MontreHomme in montresFiltrees" :key="MontreHomme.id" @click="openModal2(MontreHomme)"
+    <div v-for="MontreHomme in montresFiltrees" :key="MontreHomme.id"
       class="bg-gray-300 rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
       <!-- Image cliquable -->
       <img :src="MontreHomme.photo.startsWith('/storage')
@@ -19,7 +19,7 @@
           Fcfa</span>
       </p>
 
-      <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition">
+      <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition" @click="openModal2(MontreHomme)">
         Commander
       </button>
       <!-- Modal -->
@@ -42,7 +42,8 @@
       </div>
     </div>
   </div><br><br>
-  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2"
+  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" 
+  :onClose="closeModal2" :genre="'homme'"
   class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl  z-50" />
   <Footer />
 </template>
@@ -60,7 +61,7 @@ const montresFiltrees = ref([]);
 const imageZoom = ref(null); // <- état pour l’image agrandie
 const couleurs = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500']
 const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
-const selectmontre = ref(null)
+const selectmontre = ref(null);
 
 onMounted(async () => {
   try {
@@ -95,8 +96,8 @@ function closeModal() {
 function openModal2(MontreHomme) {
   selectmontre.value = MontreHomme
 }
+// Fermer le modal detail montre plus formulaire
 function closeModal2() {
   selectmontre.value = null
 }
-
 </script>

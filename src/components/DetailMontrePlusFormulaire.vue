@@ -5,7 +5,8 @@
         leave-to-class="opacity-0 translate-y-4">
         <div class="flex flex-col md:flex-row gap-6 p-8 bg-black shadow-lg rounded-lg">
             <!-- Bouton croix -->
-            <button @click="onClose" class="absolute top-4 right-2 text-white text-2xl cursor-pointer font-bold hover:text-red-500">
+            <button @click="onClose"
+                class="absolute top-4 right-2 text-white text-2xl cursor-pointer font-bold hover:text-red-500">
                 ✕
             </button>
             <!-- Bloc gauche : image + description de la montre -->
@@ -25,13 +26,12 @@
                     <input v-model="form.nom_client" type="text" placeholder="Nom" class="w-full border rounded p-2" />
                     <input v-model="form.prenom_client" type="text" placeholder="Prénom"
                         class="w-full border rounded p-2" />
-                    <input v-model="form.quantité_montre" type="number" min="1" placeholder="Quantité"
-                        class="w-full border rounded p-2" />
                     <input v-model="form.quartier_client" type="text" placeholder="Quartier"
                         class="w-full border rounded p-2" />
                     <input v-model="form.telephone_client" type="tel" placeholder="Numéro de téléphone"
                         class="w-full border rounded p-2" />
-
+                    <input v-model="form.quantité_montre" type="number" min="1" placeholder="Quantité"
+                        class="w-full border rounded p-2" />
                     <button type="submit"
                         class="text-lg font-extrabold w-full bg-orange-300 text-black py-2 rounded hover:bg-yellow-700 transition">
                         Passer la commande
@@ -51,35 +51,38 @@ const props = defineProps({
         type: Object,
         required: true
     },
-     onClose: Function
+    onClose: Function,
+      genre: String
 })
 
 const form = ref({
     nom_client: '',
     prenom_client: '',
-    quantité_montre: 1,
     quartier_client: '',
-    telephone_client: ''
+    telephone_client: '',
+    quantité_montre: 1,
 })
 
 const submitForm = async () => {
     try {
         const commande = {
             ...form,
-            photo: props.montre.photo,
-            description: props.montre.description,
-            nom: props.montre.nom,
-            prix: props.montre.prix
+            photo_montre: props.montre.photo,
+            description_montre: props.montre.description,
+            nom_montre: props.montre.nom,
+            genre_montre: props.genre,
+            prix_unitaire_montre: props.montre.prix,
+            prix_total_montre: prix_unitaire_montre * form.quantité_montre
         }
 
         await axios.post('http://localhost:8000/api/commandes', commande)
         alert('Commande envoyée avec succès !')
         form.nom_client = ''
         form.prenom_client = ''
-        form.quantité_montre = 1
         form.quartier_client = ''
         form.telephone_client = ''
-         props.onClose()
+        form.quantité_montre = 1
+        props.onClose()
     } catch (error) {
         console.error(error)
         alert('Erreur lors de l’envoi de la commande.')

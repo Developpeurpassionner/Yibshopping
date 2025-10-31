@@ -19,7 +19,8 @@
           Fcfa</span>
       </p>
 
-      <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition">
+      <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition"
+        @click="openModal2(MontreFemme)">
         Commander
       </button>
       <!-- Modal -->
@@ -31,17 +32,15 @@
             ✕
           </button>
           <!-- Image agrandie -->
-            <div class="w-[400px] h-[400px] flex items-center justify-center">
-    <img
-      :src="imageZoom"
-      alt="Montre agrandie"
-      class="max-w-full max-h-full object-contain"
-    />
-  </div>
+          <div class="w-[400px] h-[400px] flex items-center justify-center">
+            <img :src="imageZoom" alt="Montre agrandie" class="max-w-full max-h-full object-contain" />
+          </div>
         </div>
       </div>
     </div>
   </div><br><br>
+  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2" :genre="'femme'"
+    class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl  z-50" />
   <Footer />
 </template>
 
@@ -51,12 +50,14 @@ import NavBar from "../components/NavBar.vue";
 import ButtonNavigationMontre from "@/components/ButtonNavigationMontre.vue";
 import Footer from "@/components/Footer.vue";
 import axios from 'axios'
+import DetailMontrePlusFormulaire from "@/components/DetailMontrePlusFormulaire.vue";
 import { ref, onMounted } from "vue";
 const MontresFemmes = ref([]);
 const montresFiltrees = ref([]);
 const imageZoom = ref(null); // <- état pour l’image agrandie
 const couleurs = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500']
 const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
+const selectmontre = ref(null);
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8000/api/montresfemmes');
@@ -81,9 +82,16 @@ function openModal(MontreFemme) {
     ? "http://localhost:8000" + MontreFemme.photo
     : MontreFemme.photo;
 }
-
 // Fermer le modal
 function closeModal() {
   imageZoom.value = null;
+}
+// Ouvrir le modal detail montre plus formulaire
+function openModal2(MontreFemme) {
+  selectmontre.value = MontreFemme
+}
+// Fermer le modal detail montre plus formulaire
+function closeModal2() {
+  selectmontre.value = null
 }
 </script>
