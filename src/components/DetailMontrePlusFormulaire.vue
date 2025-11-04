@@ -3,7 +3,11 @@
         enter-from-class="opacity-0 translate-y-4" enter-to-class="opacity-100 translate-y-0"
         leave-active-class="transition duration-300 ease-in" leave-from-class="opacity-100 translate-y-0"
         leave-to-class="opacity-0 translate-y-4">
-        <div class="flex flex-col md:flex-row gap-6 p-8 bg-black shadow-lg rounded-lg">
+        <div class="flex flex-col md:flex-row gap-6 p-8 bg-black shadow-lg rounded-lg 
+        fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+        <div v-if="confirmationMessage" class="bg-green-100 text-green-800 p-4 rounded mt-4 whitespace-pre-line z-50">
+            {{ confirmationMessage }}
+        </div>
             <!-- Bouton croix -->
             <button @click="onClose"
                 class="absolute top-4 right-2 text-white text-2xl cursor-pointer font-bold hover:text-red-500">
@@ -34,34 +38,37 @@
                     <input v-model="form.telephone_client" type="tel" placeholder="Numéro de téléphone"
                         class="w-full border rounded p-2" />
                     <p v-if="errors.telephone_client" class="text-red-500 text-sm">{{ errors.telephone_client[0] }}</p>
-                    <input v-model="form.quantité_montre" type="number" min="1" placeholder="Quantité"
-                        class="w-full border rounded p-2" />
-                    <p v-if="errors.quantité_montre" class="text-red-500 text-sm">{{ errors.quantité_montre[0] }}</p>
+                    <div>
+                        <label
+                            class="left-2 top-2 text-gray-500 text-[16px] peer-placeholder-shown:top-0 peer-focus:top-0 transition-all">
+                            Quantité
+                        </label>
+                        <input v-model.number="form.quantite_montre" type="number" min="1" required
+                            class="w-full border rounded p-2" />
+                    </div>
+                    <p v-if="errors.quantite_montre" class="text-red-500 text-sm">{{ errors.quantite_montre[0] }}</p>
                     <button type="submit"
-                        class="text-lg font-extrabold w-full bg-orange-300 text-black py-2 rounded hover:bg-yellow-700 transition">
+                        class="text-lg font-extrabold w-full bg-orange-300 text-black py-2 rounded cursor-pointer hover:bg-yellow-700 transition">
                         Passer la commande
                     </button>
                 </form>
             </div>
         </div>
     </Transition>
-    <div v-if="confirmationMessage" class="bg-green-100 text-green-800 p-4 rounded mt-4 whitespace-pre-line">
-  {{ confirmationMessage }}
-</div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
 const errors = ref({})
-const confirmationMessage = ref('')
+const confirmationMessage = ref(null)
 const props = defineProps({
     montre: {
         type: Object,
         required: true
     },
     onClose: Function,
-      genre: String
+    genre: String
 })
 
 const form = ref({
@@ -69,53 +76,54 @@ const form = ref({
     prenom_client: '',
     quartier_client: '',
     telephone_client: '',
-    quantité_montre: 1,
+    quantite_montre: 1,
 })
 
 const submitForm = async () => {
-     errors.value = {} // Réinitialise les erreurs
+    errors.value = {} // Réinitialise les erreurs
     try {
+        const prixTotal = props.montre.prix * form.value.quantite_montre
         const commander = {
-            nom_client: form.nom_client,
-            prenom_client: form.prenom_client,
-            quartier_client: form.quartier_client,
-            telephone_client: form.telephone_client,
-            quantité_montre: form.quantité_montre,
+            nom_client: form.value.nom_client,
+            prenom_client: form.value.prenom_client,
+            quartier_client: form.value.quartier_client,
+            telephone_client: form.value.telephone_client,
+            quantite_montre: form.value.quantite_montre,
             montre_id: props.montre.id,
             photo_montre: props.montre.photo,
             description_montre: props.montre.description,
             nom_montre: props.montre.nom,
             genre_montre: props.genre,
             prix_unitaire_montre: props.montre.prix,
-            prix_total_montre: prix_unitaire_montre * form.quantité_montre
+            prix_total_montre: prixTotal
         }
 
-        await axios.post('http://localhost:8000/api/commandes', commander)
-        alert(response.data.message)
-        form.nom_client = ''
-        form.prenom_client = ''
-        form.quartier_client = ''
-        form.telephone_client = ''
-        form.quantité_montre = 1
-        props.onClose()
-    } catch (error) {
-       if (error.response && error.response.status === 422) {
-      errors.value = error.response.data.errors || {}
-      alert(error.response.data.message || 'Veuillez corriger les erreurs.')
-    } else {
-      alert('Une erreur est survenue.')
-    }
-  }
-   const data = response.data.commande
-    confirmationMessage.value = `
+        const response = await axios.post('http://localhost:8000/api/commandes', commander)
+        const data = response.data.commande
+        confirmationMessage.value = `
       🎉 Bonjour ${data.prenom_client} ! Votre commande de ${data.quantite_montre} montre(s) a bien été enregistrée. 📦
       🕰️ Montre : ${data.nom_montre}
       💰 Prix unitaire : ${data.prix_unitaire_montre} FCFA
+      💰 Prix total : ${data.prix_total_montre} FCFA
       📍 Livraison à : ${data.quartier_client}
       📞 Nous vous contacterons au ${data.telephone_client} pour la livraison.
-
       Merci pour votre confiance 🙏. Un livreur vous apportera votre commande très bientôt !
     `
+    props.onClose()
+        // Réinitialiser le formulaire après soumission réussie
+        form.value.nom_client = ''
+        form.value.prenom_client = ''
+        form.value.quartier_client = ''
+        form.value.telephone_client = ''
+        form.value.quantite_montre = 1
+    } catch (error) {
+        if (error.response && error.response.status === 422) {
+            errors.value = error.response.data.errors || {}
+            alert(error.response.data.message || 'Veuillez corriger les erreurs.')
+        } else {
+            alert('Une erreur est survenue.')
+        }
+        console.log('Erreur complète :', error.response.data)
+    }
 }
 </script>
-

@@ -39,8 +39,7 @@
       </div>
     </div>
   </div><br><br>
-  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2" :genre="'femme'"
-    class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl  z-50" />
+  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2" :genre="'femme'" />
   <Footer />
 </template>
 

@@ -3,9 +3,10 @@ import Home from "../views/Home.vue";
 import inscription from "../views/inscription.vue";
 import Connexion from "@/views/connexion.vue";
 import FormulaireDeConnexionAuPanneauAdmin from "@/views/FormulaireDeConnexionAuPanneauAdmin.vue";
-import Dashboard from "@/views/Dashboard.vue";
 import MontresFemmes from "@/views/MontresFemmes.vue";
 import Connexionotp from "@/views/connexionotp.vue";
+import DashboardMontres from "@/views/DashboardMontres.vue";
+import DashboardCommandes from "@/views/DashboardCommandes.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -30,9 +31,9 @@ const router = createRouter({
       component: FormulaireDeConnexionAuPanneauAdmin,
     },
         {
-      path: "/Dashboard",
-      name: "Dashboard",
-      component: Dashboard,
+      path: "/Dashboard/Montres",
+      name: "Dashboard_montres",
+      component: DashboardMontres,
     },
      {
       path: "/Montres_femmes",
@@ -43,7 +44,12 @@ const router = createRouter({
       path: "/connexionOTP",
       name: "connexionOTP",
       component: Connexionotp
-    }
+    },
+       {
+      path: "/Dashboard/commandes",
+      name: "Dashboard_commandes",
+      component: DashboardCommandes,
+    },
   ],
 });
 
