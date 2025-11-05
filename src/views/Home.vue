@@ -65,6 +65,8 @@ import Footer from "@/components/Footer.vue";
 import axios from 'axios'
 import DetailMontrePlusFormulaire from "@/components/DetailMontrePlusFormulaire.vue";
 import { ref, onMounted } from "vue";
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const MontresHommes = ref([]);
 const montresFiltrees = ref([]);
 const imageZoom = ref(null); // <- état pour l’image agrandie
@@ -73,6 +75,7 @@ const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
 const selectmontre = ref(null);
 const confirmationMessage = ref(null)
 const showConfirmationModal = ref(false)
+const isAuthenticated = ref(false) // La variable qui vérifie si l'utilisateur est authentifié ou non
 
 onMounted(async () => {
   try {
@@ -103,9 +106,18 @@ function openModal(MontreHomme) {
 function closeModal() {
   imageZoom.value = null;
 }
-// Ouvrir le modal detail montre plus formulaire
+onMounted(() => {
+  const token = localStorage.getItem('token') // ou autre méthode
+  isAuthenticated.value = !!token
+})
+
+// Ouvrir le modal detail montre plus formulaire si l'utilisateur est authentifié si non rediriger vers la page de connexion
 function openModal2(MontreHomme) {
-  selectmontre.value = MontreHomme
+  if (isAuthenticated.value) {
+    selectmontre.value = MontreHomme
+  } else {
+    router.push('/connexion')
+  }
 }
 // Fermer le modal detail montre plus formulaire
 function closeModal2() {

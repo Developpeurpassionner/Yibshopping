@@ -39,7 +39,21 @@
       </div>
     </div>
   </div><br><br>
-  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2" :genre="'femme'" />
+  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2" :genre="'femme'"
+    @confirm="afficherConfirmation" />
+  <Transition name="fade-slide">
+    <div v-if="showConfirmationModal"
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+        <h2 class="text-2xl font-bold text-green-700 mb-4">✅ Commande confirmée</h2>
+        <p class="text-gray-700 whitespace-pre-line">{{ confirmationMessage }}</p>
+        <button @click="showConfirmationModal = false"
+          class="mt-6 px-4 py-2 bg-green-600 text-white rounded cursor-pointer hover:bg-green-700 transition">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </Transition>
   <Footer />
 </template>
 
@@ -51,12 +65,17 @@ import Footer from "@/components/Footer.vue";
 import axios from 'axios'
 import DetailMontrePlusFormulaire from "@/components/DetailMontrePlusFormulaire.vue";
 import { ref, onMounted } from "vue";
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const MontresFemmes = ref([]);
 const montresFiltrees = ref([]);
 const imageZoom = ref(null); // <- état pour l’image agrandie
 const couleurs = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500']
 const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
 const selectmontre = ref(null);
+const confirmationMessage = ref(null)
+const showConfirmationModal = ref(false)
+const isAuthenticated = ref(false) // La variable qui vérifie si l'utilisateur est authentifié ou non
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8000/api/montresfemmes');
@@ -85,12 +104,21 @@ function openModal(MontreFemme) {
 function closeModal() {
   imageZoom.value = null;
 }
-// Ouvrir le modal detail montre plus formulaire
+// Ouvrir le modal detail montre plus formulaire si l'utilisateur est authentifié si non rediriger vers la page de connexion
 function openModal2(MontreFemme) {
-  selectmontre.value = MontreFemme
+  if (isAuthenticated.value) {
+    selectmontre.value = MontreFemme
+  } else {
+    router.push('/connexion')
+  }
 }
 // Fermer le modal detail montre plus formulaire
 function closeModal2() {
   selectmontre.value = null
+}
+function afficherConfirmation(message) {
+  confirmationMessage.value = message
+  selectmontre.value = null // ferme la modale du formulaire
+  showConfirmationModal.value = true
 }
 </script>
