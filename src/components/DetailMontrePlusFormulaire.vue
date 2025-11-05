@@ -5,9 +5,6 @@
         leave-to-class="opacity-0 translate-y-4">
         <div class="flex flex-col md:flex-row gap-6 p-8 bg-black shadow-lg rounded-lg 
         fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-        <div v-if="confirmationMessage" class="bg-green-100 text-green-800 p-4 rounded mt-4 whitespace-pre-line z-50">
-            {{ confirmationMessage }}
-        </div>
             <!-- Bouton croix -->
             <button @click="onClose"
                 class="absolute top-4 right-2 text-white text-2xl cursor-pointer font-bold hover:text-red-500">
@@ -62,6 +59,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 const errors = ref({})
 const confirmationMessage = ref(null)
+const emit = defineEmits(['confirm'])
 const props = defineProps({
     montre: {
         type: Object,
@@ -109,7 +107,8 @@ const submitForm = async () => {
       📞 Nous vous contacterons au ${data.telephone_client} pour la livraison.
       Merci pour votre confiance 🙏. Un livreur vous apportera votre commande très bientôt !
     `
-    props.onClose()
+        emit('confirm', confirmationMessage.value)
+
         // Réinitialiser le formulaire après soumission réussie
         form.value.nom_client = ''
         form.value.prenom_client = ''

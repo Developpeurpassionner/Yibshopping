@@ -19,7 +19,8 @@
           Fcfa</span>
       </p>
 
-      <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition" @click="openModal2(MontreHomme)">
+      <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition"
+        @click="openModal2(MontreHomme)">
         Commander
       </button>
       <!-- Modal -->
@@ -31,19 +32,28 @@
             ✕
           </button>
           <!-- Image agrandie -->
-            <div class="w-[400px] h-[400px] flex items-center justify-center">
-    <img
-      :src="imageZoom"
-      alt="Montre agrandie"
-      class="max-w-full max-h-full object-contain"
-    />
-  </div>
+          <div class="w-[400px] h-[400px] flex items-center justify-center">
+            <img :src="imageZoom" alt="Montre agrandie" class="max-w-full max-h-full object-contain" />
+          </div>
         </div>
       </div>
     </div>
   </div><br><br>
-  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" 
-  :onClose="closeModal2" :genre="'homme'" />
+  <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2" :genre="'homme'"
+    @confirm="afficherConfirmation" />
+  <Transition name="fade-slide">
+    <div v-if="showConfirmationModal"
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+        <h2 class="text-2xl font-bold text-green-700 mb-4">✅ Commande confirmée</h2>
+        <p class="text-gray-700 whitespace-pre-line">{{ confirmationMessage }}</p>
+        <button @click="showConfirmationModal = false"
+          class="mt-6 px-4 py-2 bg-green-600 text-white rounded cursor-pointer hover:bg-green-700 transition">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </Transition>
   <Footer />
 </template>
 
@@ -61,6 +71,8 @@ const imageZoom = ref(null); // <- état pour l’image agrandie
 const couleurs = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500']
 const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
 const selectmontre = ref(null);
+const confirmationMessage = ref(null)
+const showConfirmationModal = ref(false)
 
 onMounted(async () => {
   try {
@@ -99,4 +111,10 @@ function openModal2(MontreHomme) {
 function closeModal2() {
   selectmontre.value = null
 }
+function afficherConfirmation(message) {
+  confirmationMessage.value = message
+  selectmontre.value = null // ferme la modale du formulaire
+  showConfirmationModal.value = true
+}
+
 </script>
