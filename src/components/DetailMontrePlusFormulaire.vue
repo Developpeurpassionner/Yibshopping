@@ -87,20 +87,17 @@ const submitForm = async () => {
             quartier_client: form.value.quartier_client,
             telephone_client: form.value.telephone_client,
             quantite_montre: form.value.quantite_montre,
-            montre_id: props.montre.id,
-            photo_montre: props.montre.photo,
-            description_montre: props.montre.description,
-            nom_montre: props.montre.nom,
-            genre_montre: props.genre,
             prix_unitaire_montre: props.montre.prix,
-            prix_total_montre: prixTotal
+            prix_total_montre: prixTotal,
+            montre_id: props.montre.id,
+            genre_montre: props.genre
         }
 
         const response = await axios.post('http://localhost:8000/api/commandes', commander)
         const data = response.data.commande
         confirmationMessage.value = `
       🎉 Bonjour ${data.prenom_client} ! Votre commande de ${data.quantite_montre} montre(s) a bien été enregistrée. 📦
-      🕰️ Montre : ${data.nom_montre}
+      🕰️ Montre : ${data.nom_montre} pour ${data.genre_montre}
       💰 Prix unitaire : ${data.prix_unitaire_montre} FCFA
       💰 Prix total : ${data.prix_total_montre} FCFA
       📍 Livraison à : ${data.quartier_client}

@@ -9,7 +9,7 @@
 
   <div class="min-h-screen bg-gray-100 p-6 flex flex-col gap-y-8 lg:gap-y-8 md:gap-y-16">
 
-    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800 lg:text-3xl md:text-5xl">Tableau de bord</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800 lg:text-3xl md:text-5xl">Tableau de bord des montres</h1>
 
     <!-- Statistiques -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -112,12 +112,6 @@
               {{ formatDateTime(NouvelleMontre.created_at) }}
             </td>
             <td class="flex gap-x-8 p-6">
-              <button class="cursor-pointer bg-red-900 text-white text-lg lg:text-sm md:text-4xl px-4 py-1 rounded hover:bg-red-600 transition">
-                supprimer
-              </button>
-              <button class="cursor-pointer bg-green-800 text-white text-lg lg:text-sm md:text-4xl px-4 py-1 rounded hover:bg-green-400 transition">
-                Modifier
-              </button>
             </td>
           </tr>
         </tbody>
@@ -167,6 +161,10 @@ onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8000/api/Dashboard')
     ToutesLesMontres.value = response.data
+     // Calcule le nombre de montres hommes et femmes
+    const hommes = ToutesLesMontres.value.filter(m => m.genre === 'homme').length
+    const femmes = ToutesLesMontres.value.filter(m => m.genre === 'femme').length
+    stats.value = { hommes, femmes }
   } catch (error) {
     console.error('Erreur lors du chargement des montres', error)
   }
@@ -184,7 +182,7 @@ const AjouterMontre = async () => {
     formData.append('photo', photoFile.value)
   }
 
-  //Requete Api dynamique en fonction du genre
+  //Valeur de l'URL en fonction du genre
   let url = null
   if (information_montre.value.genre === 'homme') {
     url = Api_Creation_Montre.value.homme
@@ -196,7 +194,7 @@ const AjouterMontre = async () => {
     alert('Veuillez sélectionner un genre')
     return
   }
-
+  //Envoyer la requête POST pour ajouter la montre
   try {
     const response = await axios.post(url, formData)
     const NouvelleMontre = response.data.MontreAdd

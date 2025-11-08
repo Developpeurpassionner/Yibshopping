@@ -7,6 +7,7 @@ import MontresFemmes from "@/views/MontresFemmes.vue";
 import Connexionotp from "@/views/connexionotp.vue";
 import DashboardMontres from "@/views/DashboardMontres.vue";
 import DashboardCommandes from "@/views/DashboardCommandes.vue";
+import DashboardUtilisateurs from "@/views/DashboardUtilisateurs.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -20,22 +21,22 @@ const router = createRouter({
       name: "inscription",
       component: inscription,
     },
-     {
+    {
       path: "/connexion",
       name: "connexion",
       component: Connexion,
     },
-       {
+    {
       path: "/Admin",
       name: "Admin",
       component: FormulaireDeConnexionAuPanneauAdmin,
     },
-        {
+    {
       path: "/Dashboard/Montres",
       name: "Dashboard_montres",
       component: DashboardMontres,
     },
-     {
+    {
       path: "/Montres_femmes",
       name: "Montres_femmes",
       component: MontresFemmes,
@@ -43,17 +44,19 @@ const router = createRouter({
     {
       path: "/connexionOTP",
       name: "connexionOTP",
-      component: Connexionotp
+      component: Connexionotp,
     },
-       {
+    {
       path: "/Dashboard/commandes",
       name: "Dashboard_commandes",
       component: DashboardCommandes,
+    },
+     {
+      path: "/Dashboard/utilisateurs",
+      name: "Dashboard_utilisateurs",
+      component: DashboardUtilisateurs,
     },
   ],
 });
 
 export default router;
-
- 
-

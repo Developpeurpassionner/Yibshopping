@@ -1,5 +1,5 @@
 <template>
-   <!--la div de toute la page -->
+  <!--la div de toute la page -->
   <div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
     <div>
       <!-- ❌ Message d’erreur -->
@@ -28,16 +28,23 @@
         <h2 class="text-white text-2xl font-bold pb-8 text-center md:text-5xl lg:text-2xl">Formulaire d'inscription</h2>
         <form @submit.prevent="inscription">
           <div v-for="(field, index) in fields" :key="index" class="w-full relative">
-            <label :for="field.id" class="text-white block mb-2 font-semibold text-2xl lg:text-lg md:text-4xl">{{ field.label }}</label>
+            <label :for="field.id" class="text-white block mb-2 font-semibold text-2xl lg:text-lg md:text-4xl">{{
+              field.label }}</label>
             <span v-if="!form[field.model]"
               class="absolute left-2 top-8 bottom-8 text-xl text-gray-400 pointer-events-none lg:text-lg md:text-4xl">
               {{ field.placeholder }}
             </span>
-            <input :type="field.type" :id="field.id" v-model="form[field.model]" placeholder=" "
-              class="w-full px-2 py-2 rounded-lg bg-gray-800 text-white text-2xl shadow-inner
-               focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300 lg:text-lg md:text-4xl" />
+            <input :type="typeof field.type === 'function' ? field.type() : field.type" :id="field.id"
+              v-model="form[field.model]" placeholder=" " class="w-full px-2 py-2 rounded-lg bg-gray-800 text-white text-2xl shadow-inner
+           focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300 lg:text-lg md:text-4xl" />
+            <!-- 👁️ Bouton pour afficher/masquer le mot de passe -->
+            <button v-if="field.id === 'password'" type="button" @click="showPassword = !showPassword"
+              class="absolute right-3 top-10 text-white text-xl hover:text-yellow-400 transition">
+              {{ showPassword ?  '👁️':'🙈'}}
+            </button>
           </div>
-          <p class="text-white text-xl lg:text-lg md:text-4xl">Le mot de passe doit contenir au moins 8 caractères <br> avec au moins une
+          <p class="text-white text-xl lg:text-lg md:text-4xl">Le mot de passe doit contenir au moins 8 caractères <br>
+            avec au moins une
             majuscule , une minuscule et un chiffre</p>
           <button type="submit"
             class="w-full py-1 translate-y-[50%] bg-yellow-400
@@ -62,11 +69,12 @@ const form = ref({
   password: ''
 })
 const message = ref('')
+const showPassword = ref(false)
 const fields = [
   { id: 'name', label: 'Nom *', type: 'text', model: 'name', placeholder: 'Votre nom' },
   { id: 'firstname', label: 'Prénom *', type: 'text', model: 'firstname', placeholder: 'Votre prénom' },
   { id: 'email', label: 'Email *', type: 'email', model: 'email', placeholder: 'Votre email' },
-  { id: 'password', label: 'Mot de passe *', type: 'password', model: 'password', placeholder: '********' },
+  { id: 'password', label: 'Mot de passe *', type: () => showPassword.value ? 'text' : 'password', model: 'password', placeholder: '********' },
 ]
 const showMessage = ref(false)
 

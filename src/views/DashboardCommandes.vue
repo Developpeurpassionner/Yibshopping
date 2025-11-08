@@ -5,7 +5,25 @@
             🔄 Réinitialiser AUTO_INCREMENT
         </button>
         <div class="min-h-screen bg-gray-100 p-6">
-            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">📋 Tableau des Commandes</h1>
+            <div
+                class="relative bg-gradient-to-r from-green-400 to-green-600 text-white p-6 rounded-xl shadow-lg overflow-hidden animate-fade-in">
+                <!-- Icône décorative -->
+                <div class="absolute top-4 right-4 text-4xl opacity-30">
+                    💰
+                </div>
+
+                <!-- Titre -->
+                <h2 class="text-xl font-bold mb-2">Chiffre d’affaires total</h2>
+
+                <!-- Montant -->
+                <p class="text-3xl font-extrabold tracking-wide">
+                    {{ formatMontant(chiffreAffaire) }} FCFA
+                </p>
+
+                <!-- Animation décorative -->
+                <div class="absolute bottom-0 left-0 w-full h-2 bg-white opacity-20 animate-pulse"></div>
+            </div><br>
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">📋 Tableau des Commandes</h1><br>
 
             <div class="overflow-x-auto shadow-lg rounded-lg bg-white">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -42,8 +60,10 @@
                             </td>
                             <td class="px-4 py-2 text-sm text-blue-600 font-semibold">{{ commande.quantite_montre }}
                             </td>
-                            <td class="px-4 py-2 text-[15px] text-green-600">{{ commande.prix_unitaire_montre }} FCFA</td>
-                            <td class="px-4 py-2 text-[15px] text-green-700 font-bold">{{ commande.prix_total_montre }} FCFA
+                            <td class="px-4 py-2 text-[15px] text-green-600">{{ commande.prix_unitaire_montre }} FCFA
+                            </td>
+                            <td class="px-4 py-2 text-[15px] text-green-700 font-bold">{{ commande.prix_total_montre }}
+                                FCFA
                             </td>
                             <td class="px-4 py-2 text-sm text-gray-500">{{ new
                                 Date(commande.created_at).toLocaleDateString() }}</td>
@@ -102,4 +122,38 @@ const changerPage = (page) => {
 onMounted(() => {
     chargerCommandes()
 })
+const chiffreAffaire = ref(0)
+const fetchChiffreAffaire = async () => {
+    try {
+        const response = await axios.get('http://localhost:8000/api/chiffre-affaire')
+        if (response.data.success) {
+            chiffreAffaire.value = response.data.chiffre_d_affaire_total
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement du chiffre d’affaires :', error)
+    }
+}
+
+const formatMontant = (montant) => {
+    return montant.toLocaleString('fr-FR')
+}
+
+onMounted(() => fetchChiffreAffaire())
 </script>
+<style scoped>
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+}
+</style>

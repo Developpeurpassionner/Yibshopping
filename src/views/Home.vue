@@ -66,6 +66,8 @@ import axios from 'axios'
 import DetailMontrePlusFormulaire from "@/components/DetailMontrePlusFormulaire.vue";
 import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/Auth';
+const auth = useAuthStore()
 const router = useRouter()
 const MontresHommes = ref([]);
 const montresFiltrees = ref([]);
@@ -75,19 +77,20 @@ const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
 const selectmontre = ref(null);
 const confirmationMessage = ref(null)
 const showConfirmationModal = ref(false)
-const isAuthenticated = ref(false) // La variable qui vérifie si l'utilisateur est authentifié ou non
 
 onMounted(async () => {
-  try {
+  auth.checkAuth() // ← synchronise l’état avec localStorage
+
+try {
     const response = await axios.get('http://localhost:8000/api/montreshommes');
     MontresHommes.value = response.data;
     montresFiltrees.value = response.data;
 
   } catch (error) {
     console.error("Erreur lors de la récupération des montres pour hommes :", error);
-  }
-});
+  }  
 
+});
 function filtrerMontresParcategorie(categorie) {
   if (categorie === 'Tous') {
     montresFiltrees.value = MontresHommes.value;
@@ -106,14 +109,10 @@ function openModal(MontreHomme) {
 function closeModal() {
   imageZoom.value = null;
 }
-onMounted(() => {
-  const token = localStorage.getItem('token') // ou autre méthode
-  isAuthenticated.value = !!token
-})
 
 // Ouvrir le modal detail montre plus formulaire si l'utilisateur est authentifié si non rediriger vers la page de connexion
 function openModal2(MontreHomme) {
-  if (isAuthenticated.value) {
+  if (auth.isAuthenticated) {
     selectmontre.value = MontreHomme
   } else {
     router.push('/connexion')
