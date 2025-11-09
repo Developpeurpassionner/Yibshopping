@@ -5,21 +5,21 @@
   </div><br><br>
   <ButtonNavigationMontre :categories="categories" :couleurs="couleurs" @filtrer="filtrerMontresParcategorie" />
   <br>
-  <div class="grid grid-cols-1  md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+  <div class="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
     <div v-for="MontreHomme in montresFiltrees" :key="MontreHomme.id"
       class="bg-gray-300 rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
       <!-- Image cliquable -->
       <img :src="MontreHomme.photo.startsWith('/storage')
         ? 'http://localhost:8000' + MontreHomme.photo
         : MontreHomme.photo" alt="Image de la montre"
-        class="w-40 h-40 object-cover rounded-md mb-4 cursor-pointer hover:scale-105 transition duration-300"
+        class="w-40 h-40 lg:w-40 lg:h-40 md:w-50 md:h-50 object-cover rounded-md mb-4 cursor-pointer hover:scale-105 transition duration-300"
         @click="openModal(MontreHomme)" />
-      <p class="text-lg font-semibold text-gray-800 mb-1">{{ MontreHomme.nom }}</p>
-      <p class="text-lg text-gray-600 mb-2">Prix : <span class="font-bold text-blue-600">{{ MontreHomme.prix }}
+      <p class="text-2xl lg:text-lg md:text-4xl font-semibold text-gray-800 mb-1">{{ MontreHomme.nom }}</p>
+      <p class="text-2xl lg:text-lg md:text-4xl text-gray-600 mb-2">Prix : <span class="font-bold text-blue-600">{{ MontreHomme.prix }}
           Fcfa</span>
       </p>
 
-      <button class="mt-auto bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition"
+      <button class="mt-auto text-xl lg:text-base md:text-3xl bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition"
         @click="openModal2(MontreHomme)">
         Commander
       </button>
