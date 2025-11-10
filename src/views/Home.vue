@@ -5,40 +5,44 @@
   </div><br><br>
   <ButtonNavigationMontre :categories="categories" :couleurs="couleurs" @filtrer="filtrerMontresParcategorie" />
   <br>
-  <div class="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-    <div v-for="MontreHomme in montresFiltrees" :key="MontreHomme.id"
-      class="bg-gray-300 rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
-      <!-- Image cliquable -->
-      <img :src="MontreHomme.photo.startsWith('/storage')
-        ? 'http://localhost:8000' + MontreHomme.photo
-        : MontreHomme.photo" alt="Image de la montre"
-        class="w-40 h-40 lg:w-40 lg:h-40 md:w-50 md:h-50 object-cover rounded-md mb-4 cursor-pointer hover:scale-105 transition duration-300"
-        @click="openModal(MontreHomme)" />
-      <p class="text-2xl lg:text-lg md:text-4xl font-semibold text-gray-800 mb-1">{{ MontreHomme.nom }}</p>
-      <p class="text-2xl lg:text-lg md:text-4xl text-gray-600 mb-2">Prix : <span class="font-bold text-blue-600">{{ MontreHomme.prix }}
-          Fcfa</span>
-      </p>
-
-      <button class="mt-auto text-xl lg:text-base md:text-3xl bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition"
-        @click="openModal2(MontreHomme)">
-        Commander
-      </button>
-      <!-- Modal -->
-      <div v-if="imageZoom" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+  <div v-if="montresFiltrees.length === 0" class="h-[300px]"></div>
+  <Transition name="fade-slide">
+    <div v-if="montresFiltrees.length > 0" class="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+      <div v-for="MontreHomme in montresFiltrees" :key="MontreHomme.id"
+        class="bg-gray-300 rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
+        <!-- Image cliquable -->
+        <img :src="MontreHomme.photo.startsWith('/storage')
+          ? 'http://localhost:8000' + MontreHomme.photo
+          : MontreHomme.photo" alt="Image de la montre"
+          class="w-40 h-40 lg:w-40 lg:h-40 md:w-50 md:h-50 object-cover rounded-md mb-4 cursor-pointer hover:scale-105 transition duration-300"
+          @click="openModal(MontreHomme)" />
+        <p class="text-2xl lg:text-lg md:text-4xl font-semibold text-gray-800 mb-1">{{ MontreHomme.nom }}</p>
+        <p class="text-2xl lg:text-lg md:text-4xl text-gray-600 mb-2">Prix : <span class="font-bold text-blue-600">{{
+          MontreHomme.prix }}
+            Fcfa</span>
+        </p>
+        <button
+          class="mt-auto text-xl lg:text-base md:text-3xl bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-500 transition"
+          @click="openModal2(MontreHomme)">
+          Commander
+        </button>
+        <!-- Modal -->
+        <div v-if="imageZoom" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
            bg-gray-100 p-4 rounded-xl  z-50">
-        <div class="relative">
-          <!-- Bouton fermer -->
-          <button @click="closeModal" class="absolute top-2 right-2 text-black text-xl font-bold cursor-pointer">
-            ✕
-          </button>
-          <!-- Image agrandie -->
-          <div class="w-[400px] h-[400px] flex items-center justify-center">
-            <img :src="imageZoom" alt="Montre agrandie" class="max-w-full max-h-full object-contain" />
+          <div class="relative">
+            <!-- Bouton fermer -->
+            <button @click="closeModal" class="absolute top-2 right-2 text-black text-2xl md:text-4xl lg:text-xl font-bold cursor-pointer">
+              ✕
+            </button>
+            <!-- Image agrandie -->
+            <div class="w-[330px] h-[330px] md:w-[500px] md:h-[500px] lg:w-[400px] lg:h-[400px] flex items-center justify-center">
+              <img :src="imageZoom" alt="Montre agrandie" class="max-w-full max-h-full object-contain" />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div><br><br>
+  </Transition><br><br>
   <DetailMontrePlusFormulaire v-if="selectmontre" :montre="selectmontre" :onClose="closeModal2" :genre="'homme'"
     @confirm="afficherConfirmation" />
   <Transition name="fade-slide">
@@ -62,15 +66,16 @@ import Carrousel from "../components/Carrousel.vue";
 import NavBar from "../components/NavBar.vue";
 import ButtonNavigationMontre from "@/components/ButtonNavigationMontre.vue";
 import Footer from "@/components/Footer.vue";
-import axios from 'axios'
 import DetailMontrePlusFormulaire from "@/components/DetailMontrePlusFormulaire.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/Auth';
+import { useMontreStore } from '@/stores/montre'
+const montreStore = useMontreStore()
 const auth = useAuthStore()
 const router = useRouter()
-const MontresHommes = ref([]);
-const montresFiltrees = ref([]);
+const MontresHommes = computed(() => montreStore.hommes)
+const montresFiltrees = ref(MontresHommes.value);
 const imageZoom = ref(null); // <- état pour l’image agrandie
 const couleurs = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500']
 const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
@@ -79,18 +84,15 @@ const confirmationMessage = ref(null)
 const showConfirmationModal = ref(false)
 
 onMounted(async () => {
-  auth.checkAuth() // ← synchronise l’état avec localStorage
+  auth.checkAuth()
 
-try {
-    const response = await axios.get('http://localhost:8000/api/montreshommes');
-    MontresHommes.value = response.data;
-    montresFiltrees.value = response.data;
+  if (!montreStore.isLoaded) {
+    await montreStore.chargerMontres()
+  }
 
-  } catch (error) {
-    console.error("Erreur lors de la récupération des montres pour hommes :", error);
-  }  
+  montresFiltrees.value = montreStore.hommes
+})
 
-});
 function filtrerMontresParcategorie(categorie) {
   if (categorie === 'Tous') {
     montresFiltrees.value = MontresHommes.value;
@@ -129,3 +131,19 @@ function afficherConfirmation(message) {
 }
 
 </script>
+
+<style scoped>
+.fade-slide-enter-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.fade-slide-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <button @click="reinitialiserAutoIncrement"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition">
+            class="bg-blue-600 text-white px-4 py-2 rounded text-lg md:text-3xl lg:text-lg hover:bg-blue-800 transition">
             🔄 Réinitialiser AUTO_INCREMENT
         </button>
         <div class="min-h-screen bg-gray-100 p-6">
@@ -13,59 +13,59 @@
                 </div>
 
                 <!-- Titre -->
-                <h2 class="text-xl font-bold mb-2">Chiffre d’affaires total</h2>
+                <h2 class="text-xl font-bold mb-2 md:text-4xl lg:text-xl">Chiffre d’affaires total</h2>
 
                 <!-- Montant -->
-                <p class="text-3xl font-extrabold tracking-wide">
+                <p class="text-3xl md:text-4xl lg:text-3xl font-extrabold tracking-wide">
                     {{ formatMontant(chiffreAffaire) }} FCFA
                 </p>
 
                 <!-- Animation décorative -->
                 <div class="absolute bottom-0 left-0 w-full h-2 bg-white opacity-20 animate-pulse"></div>
             </div><br>
-            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">📋 Tableau des Commandes</h1><br>
+            <h1 class="text-2xl md:text-4xl lg:text-3xl font-bold text-center text-gray-800 mb-6">📋 Tableau des Commandes</h1><br>
 
             <div class="overflow-x-auto shadow-lg rounded-lg bg-white">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-800 text-white">
                         <tr>
-                            <th class="px-4 py-3 text-left text-[16px] font-semibold">Nom</th>
-                            <th class="px-4 py-3 text-left text-[16px] font-semibold">Prénom</th>
-                            <th class="px-4 py-3 text-left text-[16px] font-semibold">Quartier</th>
-                            <th class="px-4 py-3 text-left text-[16px] font-semibold">Téléphone</th>
-                            <th class="px-4 py-3 text-left text-[15px] font-semibold">Photo de la montre</th>
-                            <th class="px-4 py-3 text-left text-[15px] font-semibold">Nom de la montre</th>
-                            <th class="px-4 py-3 text-left text-[15px] font-semibold">Genre de la montre</th>
-                            <th class="px-4 py-3 text-left text-[15px] font-semibold">Description de la montre</th>
-                            <th class="px-4 py-3 text-left text-[15px] font-semibold">Quantité de la montre</th>
-                            <th class="px-4 py-3 text-left text-[15px] font-semibold">Prix Unitaire</th>
-                            <th class="px-4 py-3 text-left text-[15px] font-semibold">Prix Total</th>
-                            <th class="px-4 py-3 text-left text-[16px] font-semibold">Date</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Nom</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Prénom</th> 
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Quartier</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Téléphone</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Photo de la montre</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Nom de la montre</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Genre de la montre</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Description de la montre</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Quantité de la montre</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Prix Unitaire</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Prix Total</th>
+                            <th class="px-4 py-3 text-left text-[20px] md:text-[28px] lg:text-[16px] font-semibold">Date</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         <tr v-for="commande in commandes" :key="commande.id" class="hover:bg-gray-50">
-                            <td class="px-4 py-2 text-[15px] text-gray-700">{{ commande.nom_client }}</td>
-                            <td class="px-4 py-2 text-[15px] text-gray-700">{{ commande.prenom_client }}</td>
-                            <td class="px-4 py-2 text-sm text-gray-700">{{ commande.quartier_client }}</td>
-                            <td class="px-4 py-2 text-sm text-gray-700">{{ commande.telephone_client }}</td>
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700">{{ commande.nom_client }}</td>
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700">{{ commande.prenom_client }}</td>
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700">{{ commande.quartier_client }}</td>
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700">{{ commande.telephone_client }}</td>
                             <td><img :src="commande.photo_montre.startsWith('/storage') ?
                                 'http://localhost:8000' + commande.photo_montre : commande.photo_montre"
                                     class="w-35 h-35 lg:w-25 lg:h-25 md:w-50 md:h-50 object-cover rounded cursor-pointer hover:scale-105 transition"
                                     @click="imageZoom = commande.photo_montre.startsWith('/storage') ? 'http://localhost:8000'
                                         + commande.photo_montre : commande.photo_montre" /></td>
-                            <td class="px-4 py-2 text-[15px] text-gray-700">{{ commande.nom_montre }}</td>
-                            <td class="px-4 py-2 text-[16px] text-gray-700 capitalize">{{ commande.genre_montre }}</td>
-                            <td class="px-4 py-2 text-sm text-gray-700 capitalize">{{ commande.description_montre }}
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700">{{ commande.nom_montre }}</td>
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700 capitalize">{{ commande.genre_montre }}</td>
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700 capitalize">{{ commande.description_montre }}
                             </td>
-                            <td class="px-4 py-2 text-sm text-blue-600 font-semibold">{{ commande.quantite_montre }}
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-blue-600 font-semibold">{{ commande.quantite_montre }}
                             </td>
-                            <td class="px-4 py-2 text-[15px] text-green-600">{{ commande.prix_unitaire_montre }} FCFA
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-green-600">{{ commande.prix_unitaire_montre }} FCFA
                             </td>
-                            <td class="px-4 py-2 text-[15px] text-green-700 font-bold">{{ commande.prix_total_montre }}
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-green-700 font-bold">{{ commande.prix_total_montre }}
                                 FCFA
                             </td>
-                            <td class="px-4 py-2 text-sm text-gray-500">{{ new
+                            <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-500">{{ new
                                 Date(commande.created_at).toLocaleDateString() }}</td>
                         </tr>
                     </tbody>
@@ -75,12 +75,12 @@
             <!-- Pagination -->
             <div class="flex justify-center mt-6">
                 <button @click="changerPage(pagination.current_page - 1)" :disabled="pagination.current_page === 1"
-                    class="px-4 py-2 mx-2 rounded bg-gray-300 cursor-pointer hover:bg-gray-400 disabled:opacity-50">
+                    class="px-4 py-2 mx-2 rounded bg-gray-300 text-xl lg:text-lg md:text-3xl cursor-pointer hover:bg-gray-400 disabled:opacity-50">
                     ← Précédent
                 </button>
                 <button @click="changerPage(pagination.current_page + 1)"
                     :disabled="pagination.current_page === pagination.last_page"
-                    class="px-4 py-2 mx-2 rounded bg-gray-300 cursor-pointer hover:bg-gray-400 disabled:opacity-50">
+                    class="px-4 py-2 mx-2 rounded bg-gray-300 text-xl lg:text-lg md:text-3xl cursor-pointer hover:bg-gray-400 disabled:opacity-50">
                     Suivant →
                 </button>
             </div>
