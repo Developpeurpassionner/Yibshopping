@@ -54,6 +54,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
 const message = ref('');
 const router = useRouter();
 
@@ -64,7 +65,7 @@ const AuthAdmin = ref({
 
 const connexionDashboard = async () => {
     try {
-        const response = await axios.post("http://localhost:8000/api/Admin", AuthAdmin.value);
+        const response = await axios.post(`${API_URL}/Admin`, AuthAdmin.value);
 
         // Vérifie si les identifiants sont corrects
         if (response.data.success) {

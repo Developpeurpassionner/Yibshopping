@@ -101,8 +101,8 @@
           <tr v-for="NouvelleMontre in ToutesLesMontres" :key="NouvelleMontre.id" class="border text-xl lg:text-base md:text-3xl">
             <td class="p-2">{{ NouvelleMontre.nom }}</td>
             <td><img :src="NouvelleMontre.photo.startsWith('/storage') ?
-              'http://localhost:8000' + NouvelleMontre.photo : NouvelleMontre.photo"
-                class="w-35 h-35 lg:w-20 lg:h-20 md:w-50 md:h-50 object-cover rounded cursor-pointer hover:scale-105 transition" @click="imageZoom = NouvelleMontre.photo.startsWith('/storage') ? 'http://localhost:8000'
+              BACKEND_URL + NouvelleMontre.photo : NouvelleMontre.photo"
+                class="w-35 h-35 lg:w-20 lg:h-20 md:w-50 md:h-50 object-cover rounded cursor-pointer hover:scale-105 transition" @click="imageZoom = NouvelleMontre.photo.startsWith('/storage') ? BACKEND_URL
                   + NouvelleMontre.photo : NouvelleMontre.photo" /></td>
             <td class="p-2">{{ NouvelleMontre.prix }}</td>
             <td class="p-2">{{ NouvelleMontre.genre }}</td>
@@ -132,13 +132,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
+const BACKEND_URL = API_URL.replace("/api", ""); // enlève /api pour obtenir l'URL de base du backend
 const showModal = ref(false)
 const stats = ref({ hommes: 0, femmes: 0 })
 const showSuccess = ref(false)
 const successMessage = ref('')
 const Api_Creation_Montre = ref({
-  homme: 'http://localhost:8000/api/montres_pour_hommes',
-  femme: 'http://localhost:8000/api/montres_pour_femmes'
+  homme: `${API_URL}/montres_pour_hommes`,
+  femme: `${API_URL}/montres_pour_femmes`
 })
 
 // Information de la montre à ajouter homme ou femme
@@ -156,10 +158,9 @@ const UploadPhoto = (event) => {
 }
 //la variable pour stocker toutes les montres
 const ToutesLesMontres = ref([])
-
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/Dashboard')
+    const response = await axios.get(`${API_URL}/Dashboard`)
     ToutesLesMontres.value = response.data
      // Calcule le nombre de montres hommes et femmes
     const hommes = ToutesLesMontres.value.filter(m => m.genre === 'homme').length

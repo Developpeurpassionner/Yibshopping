@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import api from "@/services/apiVercel.js"; // ✅ ton client axios configuré avec VITE_API_URL
 
 export const useMontreStore = defineStore('montre', {
   state: () => ({
@@ -10,10 +10,13 @@ export const useMontreStore = defineStore('montre', {
   actions: {
     async chargerMontres() {
       if (this.isLoaded) return
+
+      // ✅ utilise ton client api au lieu de axios.get('api/...')
       const [hommes, femmes] = await Promise.all([
-        axios.get('http://localhost:8000/api/montreshommes'),
-        axios.get('http://localhost:8000/api/montresfemmes')
+        api.get('/montreshommes'),
+        api.get('/montresfemmes')
       ])
+
       this.hommes = hommes.data
       this.femmes = femmes.data
       this.isLoaded = true

@@ -70,13 +70,14 @@ const triggerMessage = (text, type = 'error', duration = 30000) => {
 const messageType = ref('') // 'success' ou 'error'
 const isRedirecting = ref(false)
 const userFirstname = ref('')
+const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
 onMounted(() => {
   form.value.email = route.query.email || ''
 })
 const connexion = async () => {
     message.value = ''
     try {
-        const response = await axios.post('http://localhost:8000/api/connexionotp', form.value)
+        const response = await axios.post(`${API_URL}/connexionotp`, form.value)
         // Stocker le prénom
         userFirstname.value = response.data.user.firstname
         // Optionnel : stocker dans localStorage pour le garder après refresh

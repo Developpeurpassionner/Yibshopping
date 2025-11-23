@@ -91,10 +91,11 @@ const triggerMessage = (text, type = 'error', duration = 10000) => {
 }
 const messageType = ref('') // 'success' ou 'error'
 const isRedirecting = ref(false)
+const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
 const inscription = async () => {
   message.value = ''
   try {
-    const response = await axios.post('http://localhost:8000/api/inscription', form.value)
+    const response = await axios.post(`${API_URL}/inscription`, form.value)
     triggerMessage(response.data.message, 'success')
     isRedirecting.value = true
     // Redirection après 6 secondes
