@@ -12,7 +12,7 @@
         class="bg-gray-300 rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
         <!-- Image cliquable -->
         <img :src="MontreHomme.photo.startsWith('/storage')
-            ? BACKEND_URL + MontreHomme.photo
+              ? 'http://localhost:8000' + MontreHomme.photo
           : MontreHomme.photo" alt="Image de la montre"
           class="w-40 h-40 lg:w-40 lg:h-40 md:w-50 md:h-50 object-cover rounded-md mb-4 cursor-pointer hover:scale-105 transition duration-300"
           @click="openModal(MontreHomme)" />
@@ -82,8 +82,7 @@ const categories = ['Rolex', 'Hugo', 'Carter', 'Digital', 'Sport', 'Autres']
 const selectmontre = ref(null);
 const confirmationMessage = ref(null)
 const showConfirmationModal = ref(false)
-const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
-const BACKEND_URL = API_URL.replace("/api", ""); // enlève /api pour obtenir l'URL de base du backend
+
 onMounted(async () => {
   auth.checkAuth()
 
@@ -104,7 +103,7 @@ function filtrerMontresParcategorie(categorie) {
 // Ouvrir le modal
 function openModal(MontreHomme) {
   imageZoom.value = MontreHomme.photo.startsWith("/storage")
-     ? BACKEND_URL + MontreHomme.photo
+     ? "http://localhost:8000" + MontreHomme.photo
     : MontreHomme.photo;
 }
 

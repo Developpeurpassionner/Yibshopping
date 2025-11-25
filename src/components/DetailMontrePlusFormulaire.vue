@@ -13,7 +13,7 @@
             <!-- Bloc gauche : image + description de la montre -->
             <div class="md:w-1/2 flex flex-col items-center">
                 <img :src="montre.photo.startsWith('/storage')
-                    ? BACKEND_URL + montre.photo
+                    ? 'http://localhost:8000' + montre.photo
                     : montre.photo" :alt="montre.nom" class="w-64 h-64 object-cover rounded-lg shadow-md" />
                 <h2 class="mt-4 text-2xl font-bold text-gray-200">{{ montre.nom }}</h2>
                 <p class="text-xl text-blue-600 font-semibold">Prix : {{ montre.prix }} Fcfa</p>
@@ -57,8 +57,6 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
-const BACKEND_URL = API_URL.replace("/api", ""); // enlève /api pour obtenir l'URL de base du backend
 const errors = ref({})
 const confirmationMessage = ref(null)
 const emit = defineEmits(['confirm'])
@@ -95,7 +93,7 @@ const submitForm = async () => {
             genre_montre: props.genre
         }
 
-        const response = await axios.post(`${API_URL}/commandes`, commander)
+        const response = await axios.post('http://localhost:8000/api/commandes', commander)
         const data = response.data.commande
         confirmationMessage.value = `
       🎉 Bonjour ${data.prenom_client} ! Votre commande de ${data.quantite_montre} montre(s) a bien été enregistrée. 📦

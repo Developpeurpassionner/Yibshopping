@@ -69,12 +69,11 @@ const triggerMessage = (text, type = 'error', duration = 10000) => {
 }
 const messageType = ref('') // 'success' ou 'error'
 const isRedirecting = ref(false)
-const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
 const connexion = async () => {
     message.value = ''
      isRedirecting.value = true
     try {
-        const response = await axios.post(`${API_URL}/connexion`, form.value)
+        const response = await axios.post('http://localhost:8000/api/connexion', form.value)
         // Si l'email existe, un OTP est envoyé et on redirige vers la page de vérification
         triggerMessage(response.data.message, 'success', 3000)
         setTimeout(() => {

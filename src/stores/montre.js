@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import api from "@/services/apiVercel.js"; // ✅ ton client axios configuré avec VITE_API_URL
+import { getMontresHommes, getMontresFemmes } from "@/service/apiProxy.js"
 
 export const useMontreStore = defineStore('montre', {
   state: () => ({
@@ -11,14 +11,13 @@ export const useMontreStore = defineStore('montre', {
     async chargerMontres() {
       if (this.isLoaded) return
 
-      // ✅ utilise ton client api au lieu de axios.get('api/...')
       const [hommes, femmes] = await Promise.all([
-        api.get('/montreshommes'),
-        api.get('/montresfemmes')
+        getMontresHommes(),
+        getMontresFemmes()
       ])
 
-      this.hommes = hommes.data
-      this.femmes = femmes.data
+      this.hommes = hommes
+      this.femmes = femmes
       this.isLoaded = true
     }
   }

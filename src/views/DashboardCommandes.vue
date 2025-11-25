@@ -50,9 +50,9 @@
                             <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700">{{ commande.quartier_client }}</td>
                             <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700">{{ commande.telephone_client }}</td>
                             <td><img :src="commande.photo_montre.startsWith('/storage') ?
-                                BACKEND_URL + commande.photo_montre : commande.photo_montre"
+                                'http://localhost:8000' + commande.photo_montre : commande.photo_montre"
                                     class="w-35 h-35 lg:w-25 lg:h-25 md:w-50 md:h-50 object-cover rounded cursor-pointer hover:scale-105 transition"
-                                    @click="imageZoom = commande.photo_montre.startsWith('/storage') ? BACKEND_URL
+                                    @click="imageZoom = commande.photo_montre.startsWith('/storage') ? 'http://localhost:8000'
                                         + commande.photo_montre : commande.photo_montre" /></td>
                             <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700">{{ commande.nom_montre }}</td>
                             <td class="px-4 py-2 text-[22px] md:text-[30px] lg:text-[15px] text-gray-700 capitalize">{{ commande.genre_montre }}</td>
@@ -91,11 +91,9 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from 'vue'
-const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
-const BACKEND_URL = API_URL.replace("/api", ""); // enlève /api pour obtenir l'URL de base du backend
 const reinitialiserAutoIncrement = async () => {
     try {
-        const response = await axios.post(`${API_URL}/commandes/reinitialiser-auto-increment`)
+        const response = await axios.post('http://localhost:8000/api/commandes/reinitialiser-auto-increment')
         alert(response.data.message)
     } catch (error) {
         alert('Erreur lors de la réinitialisation.')
@@ -106,7 +104,7 @@ const reinitialiserAutoIncrement = async () => {
 const commandes = ref([])
 const pagination = ref({ current_page: 1, last_page: 1 })
 const chargerCommandes = async (page = 1) => {
-    const response1 = await axios.get(`${API_URL}/ToutesLesCommandes?page=` + page)
+    const response1 = await axios.get('http://localhost:8000/api/ToutesLesCommandes?page=' + page)
     commandes.value = response1.data.data
     pagination.value = {
         current_page: response1.data.current_page,
@@ -126,7 +124,7 @@ onMounted(() => {
 const chiffreAffaire = ref(0)
 const fetchChiffreAffaire = async () => {
     try {
-        const response = await axios.get(`${API_URL}/chiffre-affaire`)
+        const response = await axios.get('http://localhost:8000/api/chiffre-affaire')
         if (response.data.success) {
             chiffreAffaire.value = response.data.chiffre_d_affaire_total
         }

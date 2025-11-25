@@ -36,10 +36,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-const API_URL = import.meta.env.VITE_API_URL; // ✅ variable d'environnement
 const utilisateurs = ref({})
 const search = ref('')
-const currentUrl = ref(`${API_URL}/utilisateurs`)
+const currentUrl = ref('http://localhost:8000/api/utilisateurs')
 
 let debounceTimer = null
 
