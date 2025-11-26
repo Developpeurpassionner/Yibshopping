@@ -77,7 +77,7 @@ const fields = [
   { id: 'password', label: 'Mot de passe *', type: () => showPassword.value ? 'text' : 'password', model: 'password', placeholder: '********' },
 ]
 const showMessage = ref(false)
-
+const isRedirecting = ref(false) // ✅ propriété définie
 const triggerMessage = (text, type = 'error', duration = 10000) => {
   message.value = text
   messageType.value = type
