@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getMontresHommes, getMontresFemmes } from "@/service/apiProxy.js"
+import axios from 'axios' // ✅ on utilise axios directement ici
 
 export const useMontreStore = defineStore('montre', {
   state: () => ({
@@ -11,13 +11,14 @@ export const useMontreStore = defineStore('montre', {
     async chargerMontres() {
       if (this.isLoaded) return
 
+      // ✅ appels directs vers ton backend Laravel local
       const [hommes, femmes] = await Promise.all([
-        getMontresHommes(),
-        getMontresFemmes()
+        axios.get('http://localhost:8000/api/montreshommes'),
+        axios.get('http://localhost:8000/api/montresfemmes')
       ])
 
-      this.hommes = hommes
-      this.femmes = femmes
+      this.hommes = hommes.data
+      this.femmes = femmes.data
       this.isLoaded = true
     }
   }
