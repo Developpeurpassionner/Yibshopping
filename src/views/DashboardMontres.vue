@@ -1,4 +1,5 @@
 <template>
+  <!-- Ici showSuccess vaut true. Donc successMessage s'affiche -->
   <transition name="fade-slide">
     <div v-if="showSuccess" class="fixed top-4 left-1/2 transform -translate-x-1/2
            bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg
@@ -11,7 +12,7 @@
 
     <h1 class="text-3xl font-bold mb-6 text-center text-gray-800 lg:text-3xl md:text-5xl">Tableau de bord des montres</h1>
 
-    <!-- Statistiques -->
+    <!-- Affichage du nombre de montres hommes et femmes -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <div class="flex flex-col gap-y-4 lg:gap-y-4 md:gap-y-8">
         <div class="bg-blue-100 p-6 rounded-lg shadow text-center">
@@ -80,7 +81,7 @@
       </div>
     </transition>
 
-    <!-- Historique -->
+    <!-- Informations sur toutes les montres -->
     <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
       <h2 class="font-bold text-center text-xl lg:text-2xl md:text-4xl mb-4 text-gray-950">Informations sur toutes les
         montres</h2>
@@ -136,6 +137,8 @@ const showModal = ref(false)
 const stats = ref({ hommes: 0, femmes: 0 })
 const showSuccess = ref(false)
 const successMessage = ref('')
+/* Variable qui stock un objet avec les propriétés homme et femme qui contiennent respèctivement
+ les Apis de création de montres hommes et montres femmes */
 const Api_Creation_Montre = ref({
   homme: 'http://localhost:8000/api/montres_pour_hommes',
   femme: 'http://localhost:8000/api/montres_pour_femmes'
@@ -159,8 +162,11 @@ const ToutesLesMontres = ref([])
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8000/api/Dashboard')
+    // Mettre les données des montres récupérer dans la variable ToutesLesMontres
     ToutesLesMontres.value = response.data
-     // Calcule le nombre de montres hommes et femmes
+     /* Filtre les montres qui sont dans la variable ToutesLesMontres
+      en fonction du genre. Si il s'agit des montres hommes met dans la variable hommes
+      et pour les femmes dans la variable femmes */
     const hommes = ToutesLesMontres.value.filter(m => m.genre === 'homme').length
     const femmes = ToutesLesMontres.value.filter(m => m.genre === 'femme').length
     stats.value = { hommes, femmes }
@@ -168,7 +174,7 @@ onMounted(async () => {
     console.error('Erreur lors du chargement des montres', error)
   }
 })
-
+// La fonction qui permet d'ajouter les montres
 const AjouterMontre = async () => {
   //construire les données en FormData pour inclure le fichier photo
   const formData = new FormData()
@@ -196,9 +202,10 @@ const AjouterMontre = async () => {
   //Envoyer la requête POST pour ajouter la montre
   try {
     const response = await axios.post(url, formData)
-    const NouvelleMontre = response.data.MontreAdd
+    const NouvelleMontre = response.data.MontreAdd //Récupération de la montre créé et le mettre dans NouvelleMontre
     if (NouvelleMontre) {
-      ToutesLesMontres.value.push(NouvelleMontre)
+      ToutesLesMontres.value.push(NouvelleMontre) /*Pousse à chaque fois dans le tableau ToutesLesMontres
+      la montre créer */
     }
     successMessage.value = '✅ Montre ajoutée avec succès !'
     showSuccess.value = true
@@ -222,7 +229,8 @@ const AjouterMontre = async () => {
 }
 
 const imageZoom = ref(null) // stocke l’URL de l’image à agrandir
-
+/*La date de création de chaque montre avec les detais
+jour , mois , année , heure , minutes */
 const formatDateTime = (timestamp) => {
   const date = new Date(timestamp)
   return date.toLocaleString('fr-FR', {
